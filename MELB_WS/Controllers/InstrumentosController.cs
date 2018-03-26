@@ -15,7 +15,7 @@ namespace MELB_WS.Controllers
         public IEnumerable<string> Get()
         {
 
-            return new string[] { "value1", "value2" };
+            return new string[] { "svafluef1v", "value2" };
         }
 
         // GET api/values/5
