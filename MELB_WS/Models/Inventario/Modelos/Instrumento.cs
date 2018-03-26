@@ -14,7 +14,10 @@ namespace MELB_WS.Models.Inventario
         public Byte[] Imagen { get; set;}
         public string Marca { get; set; }
         public string Descripcion { get; set; }
-        public String Estado { get; set; }
-
+        public string Estado { get; set; }
+        public string Nombre_Estuche { get; set; }
+        public string Proveedor { get; set; }
+        public string Ubicacion { get; set; }
+        
     }
 }

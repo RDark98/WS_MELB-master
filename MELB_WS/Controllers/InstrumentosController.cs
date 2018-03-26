@@ -5,16 +5,18 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Swashbuckle.Swagger.Annotations;
+using MELB_WS.Models.Inventario.Operaciones;
 
 namespace MELB_WS.Controllers
 {
     public class InstrumentosController : ApiController
     {
-        // GET api/values
+        Operaciones_Inventario Instancia_OP = new Operaciones_Inventario();
+        
         [SwaggerOperation("GetAll")]
         public IEnumerable<string> Get()
         {
-
+            Instancia_OP.Devolver_Lista_Todos_Instrumentos();
             return new string[] { "svafluef1v", "value2" };
         }
 

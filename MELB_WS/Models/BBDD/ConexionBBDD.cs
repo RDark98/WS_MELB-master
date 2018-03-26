@@ -8,17 +8,15 @@ namespace MELB_WS.Models.BBDD
 { 
 
     /*
-        Descripción : Contiene la conexión a la base de datos
-                      mediante la cual vamos a hacer las oper
-                      aciones con los prodecimientos almacena
-                      dos.
+         Definicion :  Clase que contiene la conexión hacia  la Base de datos                      .
     */
 
     public class ConexionBBDD
     {
         private string Cadena_Conexion = "Server=tcp:melb.database.windows.net,1433;Initial Catalog=MeLB;Persist Security Info=False;User ID=MeLbAdmin;Password=eXOsSMjv9;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-        public SqlConnection Conexion = null;
+        public SqlConnection Conexion;
 
+        // Inicializa la conexión a la BBDD //
         public Boolean Abrir_Conexion_BBDD()
         {
             Conexion = new SqlConnection(Cadena_Conexion);
@@ -33,10 +31,11 @@ namespace MELB_WS.Models.BBDD
             return true;
         }
 
+        // Cierra la conexión hacia la BBDD //
         public Boolean Cerrar_Conexion()
         {
             Conexion.Dispose();
-            return true;
+            return false;
         }
 
     }
