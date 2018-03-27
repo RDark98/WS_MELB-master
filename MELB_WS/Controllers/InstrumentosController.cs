@@ -14,10 +14,9 @@ namespace MELB_WS.Controllers
         Operaciones_Inventario Instancia_OP = new Operaciones_Inventario();
         
         [SwaggerOperation("GetAll")]
-        public IEnumerable<string> Get()
+        public string Get()
         {
-            Instancia_OP.Devolver_Lista_Todos_Instrumentos();
-            return new string[] { "svafluef1v", "value2" };
+            return Instancia_OP.Devolver_Lista_Todos_Instrumentos();            
         }
 
         // GET api/values/5
