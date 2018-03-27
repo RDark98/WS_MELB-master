@@ -26,17 +26,9 @@ namespace MELB_WS.Models.Inventario.Operaciones
         {
             SqlCommand CMD = new SqlCommand("I_Listado_Instrumentos", Instancia_BBDD.Conexion);
             SqlDataReader SqlReader;
-            CMD.CommandType = CommandType.StoredProcedure;
-
-            /*
-            CMD.Parameters.AddWithValue("Intevalo_Menor", 1);
-            CMD.Parameters.AddWithValue("Intervalo_Mayor", 30);
-            CMD.Parameters.AddWithValue("Bandera", 0);*/
-
+            CMD.CommandType = CommandType.StoredProcedure;      
             SqlReader = CMD.ExecuteReader();
-
             List<Instrumento> Lista_Instrumento= new List<Instrumento>();
-
             while (SqlReader.Read())
             {
                 Instrumento Nuevo_Instrumento = new Instrumento();
@@ -50,12 +42,41 @@ namespace MELB_WS.Models.Inventario.Operaciones
                 Nuevo_Instrumento.Estado = SqlReader.GetString(7);
                 Nuevo_Instrumento.Nombre_Estuche = SqlReader.GetString(8);
                 Nuevo_Instrumento.Proveedor = SqlReader.GetString(9);
+                Nuevo_Instrumento.Ubicacion = SqlReader.GetString(10);
                 Lista_Instrumento.Add(Nuevo_Instrumento);
             }
-
+            CMD.Dispose();            
             var JSON= new JavaScriptSerializer();
             return  JSON.Serialize(Lista_Instrumento);            
         }
+        // Devuelve un instrumento por Indice //
+        public dynamic Devolver_Instrumento_Indice(int I)
+        {
+            SqlCommand CMD = new SqlCommand("I_Listar_Instrumento_Individual", Instancia_BBDD.Conexion);
+            SqlDataReader SqlReader;
+            CMD.CommandType = CommandType.StoredProcedure;
+            CMD.Parameters.Add("@ID_Instrumento", SqlDbType.Int).Value = I;
+            SqlReader = CMD.ExecuteReader();
+            List<Instrumento> Lista_Instrumento = new List<Instrumento>();
+            while (SqlReader.Read())
+            {
+                Instrumento Nuevo_Instrumento = new Instrumento();
+                Nuevo_Instrumento.ID_Instrumento = SqlReader.GetInt32(0);
+                Nuevo_Instrumento.Nombre = SqlReader.GetString(1);
+                Nuevo_Instrumento.Material = SqlReader.GetString(2);
+                Nuevo_Instrumento.Color = SqlReader.GetString(3);
+                Nuevo_Instrumento.Imagen = SqlReader.GetString(4);
+                Nuevo_Instrumento.Marca = SqlReader.GetString(5);
+                Nuevo_Instrumento.Descripcion = SqlReader.GetString(6);
+                Nuevo_Instrumento.Estado = SqlReader.GetString(7);
+                Nuevo_Instrumento.Nombre_Estuche = SqlReader.GetString(8);
+                Nuevo_Instrumento.Proveedor = SqlReader.GetString(9);
+                Nuevo_Instrumento.Ubicacion = SqlReader.GetString(10);
+                Lista_Instrumento.Add(Nuevo_Instrumento);
+            }
 
+            var JSON = new JavaScriptSerializer();
+            return JSON.Serialize(Lista_Instrumento);
+        }
     }
 }

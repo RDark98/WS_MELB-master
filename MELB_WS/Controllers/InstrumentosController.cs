@@ -19,13 +19,12 @@ namespace MELB_WS.Controllers
             return Instancia_OP.Devolver_Lista_Todos_Instrumentos();            
         }
 
-        // GET api/values/5
         [SwaggerOperation("GetById")]
         [SwaggerResponse(HttpStatusCode.OK)]
         [SwaggerResponse(HttpStatusCode.NotFound)]
-        public string Get(int id)
+        public string Get(int ID)
         {
-            return "value";
+            return Instancia_OP.Devolver_Instrumento_Indice(ID);
         }
 
         // POST api/values
@@ -41,6 +40,7 @@ namespace MELB_WS.Controllers
         [SwaggerResponse(HttpStatusCode.NotFound)]
         public void Put(int id, [FromBody]string value)
         {
+                
         }
 
         // DELETE api/values/5
