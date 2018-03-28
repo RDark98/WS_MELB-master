@@ -13,18 +13,20 @@ namespace MELB_WS.Controllers
     {
         Operaciones_Inventario Instancia_OP = new Operaciones_Inventario();
         
+        // Retorno de toda la coleccion de datos //
         [SwaggerOperation("GetAll")]
         public string Get()
         {
             return Instancia_OP.Devolver_Lista_Todos_Instrumentos();            
         }
-
+        
+        // Retorno de un registro de la coleccion de datos //
         [SwaggerOperation("GetById")]
         [SwaggerResponse(HttpStatusCode.OK)]
         [SwaggerResponse(HttpStatusCode.NotFound)]
         public string Get(int ID)
         {
-            return Instancia_OP.Devolver_Instrumento_Indice(ID);
+            return Instancia_OP.Devolver_Lista_Todos_Instrumentos(1,ID);
         }
 
         // POST api/values
