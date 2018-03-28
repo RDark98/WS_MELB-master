@@ -16,7 +16,7 @@ namespace MELB_WS.Controllers
         [SwaggerOperation("GetAll")]
         public string Get()
         {
-
+            return Instancia_OP.Devolver_Lista_Todos_Proveedores();
         }
 
         [SwaggerOperation("GetById")]
