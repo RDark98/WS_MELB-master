@@ -69,10 +69,10 @@ namespace MELB_WS.Models.Inventario.Operaciones
         // Lista de todos los Proveedores //
         public dynamic Devolver_Lista_Todos_Proveedores()
         {
-            SqlCommand CMD = new SqlCommand("I_Listado_Proveedores", Instancia_BBDD.Conexion);
+            SqlCommand CMD2 = new SqlCommand("I_Listado_Proveedores", Instancia_BBDD.Conexion);
             SqlDataReader SqlReader;
-            CMD.CommandType = CommandType.StoredProcedure;
-            SqlReader = CMD.ExecuteReader();
+            CMD2.CommandType = CommandType.StoredProcedure;
+            SqlReader = CMD2.ExecuteReader();
             List<Proveedor> Lista_Proveedor = new List<Proveedor>();
             while (SqlReader.Read())
             {
@@ -86,7 +86,7 @@ namespace MELB_WS.Models.Inventario.Operaciones
                 Nuevo_Proveedor.Imagen = SqlReader.GetString(6);
                 Lista_Proveedor.Add(Nuevo_Proveedor);
             }
-            CMD.Dispose();
+            CMD2.Dispose();
             var JSON = new JavaScriptSerializer();
             return JSON.Serialize(Lista_Proveedor);
         }
