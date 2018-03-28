@@ -24,7 +24,7 @@ namespace MELB_WS.Models.Inventario.Operaciones
         }
 
         // Devuelve la lista total de todos los instrumentos //
-        public dynamic Devolver_Lista_Todos_Instrumentos(int Bandera = 0 , int ID_Instrumento = 0)
+        public dynamic Devolver_Lista_Todos_Instrumentos(int Bandera = 1 , int ID_Instrumento = 0)
         {
             if (Instancia_BBDD.Abrir_Conexion_BBDD() == true)
             {                

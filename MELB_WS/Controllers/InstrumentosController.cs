@@ -26,7 +26,7 @@ namespace MELB_WS.Controllers
         [SwaggerResponse(HttpStatusCode.NotFound)]
         public string Get(int ID)
         {
-            return Instancia_OP.Devolver_Lista_Todos_Instrumentos(1,ID);
+            return Instancia_OP.Devolver_Lista_Todos_Instrumentos(0,ID);
         }
 
         // POST api/values
