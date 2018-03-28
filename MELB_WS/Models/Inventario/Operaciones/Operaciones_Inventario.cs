@@ -59,6 +59,10 @@ namespace MELB_WS.Models.Inventario.Operaciones
                 return "{ \"Error\": { \"Mensaje_Error\": \"Error de conexión con la base de datos\"}";
             }
         }
- 
+
+        public void Insertar_Instrumento()
+        {
+
+        }
     }
 }

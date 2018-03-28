@@ -32,8 +32,10 @@ namespace MELB_WS.Controllers
         // POST api/values
         [SwaggerOperation("Create")]
         [SwaggerResponse(HttpStatusCode.Created)]
-        public void Post([FromBody]string value)
+        [SwaggerResponse(HttpStatusCode.NotFound)]
+        public void Post([FromBody]dynamic value)
         {
+            string A = value.var1.value;
         }
 
         // PUT api/values/5
