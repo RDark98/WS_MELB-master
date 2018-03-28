@@ -24,7 +24,7 @@ namespace MELB_WS.Controllers
         [SwaggerResponse(HttpStatusCode.NotFound)]
         public string Get(int ID)
         {
-
+            return null;
         }
 
         // POST api/values

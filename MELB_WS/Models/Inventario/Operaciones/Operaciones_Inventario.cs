@@ -6,6 +6,7 @@ using System.Web;
 using MELB_WS.Models.BBDD;
 using System.Data;
 using System.Web.Script.Serialization;
+using MELB_WS.Models.Inventario.Modelos;
 
 namespace MELB_WS.Models.Inventario.Operaciones
 {
