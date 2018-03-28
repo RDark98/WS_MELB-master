@@ -19,13 +19,6 @@ namespace MELB_WS.Controllers
             return Instancia_OP.Devolver_Lista_Todos_Proveedores();
         }
 
-        [SwaggerOperation("GetById")]
-        [SwaggerResponse(HttpStatusCode.OK)]
-        [SwaggerResponse(HttpStatusCode.NotFound)]
-        public string Get(int ID)
-        {
-
-        }
 
         // POST api/values
         [SwaggerOperation("Create")]
