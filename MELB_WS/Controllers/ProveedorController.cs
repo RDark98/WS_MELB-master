@@ -47,7 +47,7 @@ namespace MELB_WS.Controllers
             /*
             if (ModelState.IsValid && Ins != null)
             {
-                return Instancia_OP.Actualizar_Instrumento(Ins);
+                return Instancia_OP.Actualizar_(Ins);
             }
             else
             {
@@ -63,7 +63,7 @@ namespace MELB_WS.Controllers
         [SwaggerResponse(HttpStatusCode.NotFound)]
         public string Delete(int ID)
         {
-            return Instancia_OP.Eliminar_Instrumento(ID);
+            return Instancia_OP.Eliminar_Proveedor(ID);
         }
 
     }

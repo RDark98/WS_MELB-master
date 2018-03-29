@@ -217,7 +217,6 @@ namespace MELB_WS.Models.Inventario.Operaciones
             }
         }
 
-
         // Inserta un Proveedor dado su modelo //
         public string Insertar_Proveedor(Proveedor Inst)
         {
@@ -238,6 +237,25 @@ namespace MELB_WS.Models.Inventario.Operaciones
                 CMD.Dispose();
                 Instancia_BBDD.Cerrar_Conexion();
                 return "{\"Cod_Resultado\": 1,\"Mensaje\": \"Se inserto el nuevo registro\"}";
+            }
+            else
+            {
+                return "{\"Cod_Resultado\": -1,\"Mensaje\": \"No se pudo conectar con la base de datos\"}";
+            }
+        }
+
+        // Elimina un Proveedor dado su identificador //
+        public string Eliminar_Proveedor(int Id)
+        {
+            if (Instancia_BBDD.Abrir_Conexion_BBDD() == true)
+            {
+                CMD = new SqlCommand("I_Eliminar_Proveedor", Instancia_BBDD.Conexion);
+                CMD.CommandType = CommandType.StoredProcedure;
+                CMD.Parameters.Add("@ID_Proveedor", SqlDbType.Int).Value = Id;
+                CMD.ExecuteNonQuery();
+                CMD.Dispose();
+                Instancia_BBDD.Cerrar_Conexion();
+                return "{\"Cod_Resultado\": 1,\"Mensaje\": \"Se elimino el instrumento\"}";
             }
             else
             {
