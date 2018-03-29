@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using Swashbuckle.Swagger.Annotations;
 using MELB_WS.Models.Inventario.Operaciones;
-using MELB_WS.Models.Inventario;
+using MELB_WS.Models.Inventario.Modelos;
 
 namespace MELB_WS.Controllers
 {
@@ -41,7 +41,7 @@ namespace MELB_WS.Controllers
         [SwaggerOperation("Update")]
         [SwaggerResponse(HttpStatusCode.OK)]
         [SwaggerResponse(HttpStatusCode.NotFound)]
-        public string Put([FromBody]Instrumento Ins)
+        public string Put([FromBody]Proveedor Ins)
         {
             return null;
             /*
