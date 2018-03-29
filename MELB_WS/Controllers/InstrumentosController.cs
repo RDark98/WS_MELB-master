@@ -30,25 +30,39 @@ namespace MELB_WS.Controllers
             return Instancia_OP.Devolver_Lista_Todos_Instrumentos(0,ID);
         }
 
-        // POST api/values
+        // Creacion de un nuevo registro //
         [SwaggerOperation("Create")]
         [SwaggerResponse(HttpStatusCode.Created)]
         [SwaggerResponse(HttpStatusCode.NotFound)]
         public string Post([FromBody]Instrumento Ins)
         {
-            return Instancia_OP.Insertar_Instrumento(Ins);
+            if (ModelState.IsValid && Ins != null)
+            {
+                return Instancia_OP.Insertar_Instrumento(Ins);
+            }            
+            else 
+            {
+                return "{\"Cod_Resultado\": -1,\"Mensaje\": \"El modelo no es correcto, asegurate de enviar bien los datos\"}";
+            }
         }
 
-        // PUT api/values/5
+        // Actualizacion de un registro ya existente //
         [SwaggerOperation("Update")]
         [SwaggerResponse(HttpStatusCode.OK)]
         [SwaggerResponse(HttpStatusCode.NotFound)]
         public string Put([FromBody]Instrumento Ins)
         {
-            return Instancia_OP.Actualizar_Instrumento(Ins);
+            if (ModelState.IsValid && Ins != null)
+            {
+                return Instancia_OP.Actualizar_Instrumento(Ins);
+            }
+            else
+            {
+                return "{\"Cod_Resultado\": -1,\"Mensaje\": \"El modelo no es correcto, asegurate de enviar bien los datos\"}";
+            }
         }
 
-        // DELETE api/values/5
+        // Eliminación de un registro //
         [SwaggerOperation("Delete")]
         [SwaggerResponse(HttpStatusCode.OK)]
         [SwaggerResponse(HttpStatusCode.NotFound)]
