@@ -168,6 +168,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\BBDD\ConexionBBDD.cs" />
+    <Compile Include="Models\Inventario\Modelos\Accesorio.cs" />
+    <Compile Include="Models\Inventario\Modelos\Estuche.cs" />
     <Compile Include="Models\Inventario\Modelos\Instrumento.cs" />
     <Compile Include="Models\Inventario\Modelos\Proveedor.cs" />
     <Compile Include="Models\Inventario\Operaciones\Operaciones_Inventario.cs" />

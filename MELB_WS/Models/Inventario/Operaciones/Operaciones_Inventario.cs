@@ -194,7 +194,7 @@ namespace MELB_WS.Models.Inventario.Operaciones
                         Nuevo_Proveedor.Telefono_1 = SqlReader.GetInt32(2);
                         Nuevo_Proveedor.Telefono_2 = SqlReader.GetInt32(3);
                         Nuevo_Proveedor.Correo = SqlReader.GetString(4);
-                        Nuevo_Proveedor.Direccion = SqlReader.GetString(5);
+                        Nuevo_Proveedor.Dirección = SqlReader.GetString(5);
                         Nuevo_Proveedor.Imagen = SqlReader.GetString(6);
                         Lista_Proveedor.Add(Nuevo_Proveedor);
                     }
