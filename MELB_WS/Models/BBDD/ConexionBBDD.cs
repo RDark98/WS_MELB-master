@@ -8,7 +8,7 @@ namespace MELB_WS.Models.BBDD
 {
 
     /*
-         Definicion :  Clase que contiene la conexión hacia  la Base de datos                      .
+         Definicion :  Clase que contiene la conexión hacia  la Base de datos.
     */
 
     public class ConexionBBDD

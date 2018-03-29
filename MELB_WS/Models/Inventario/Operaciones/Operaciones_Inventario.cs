@@ -12,6 +12,11 @@ using Newtonsoft.Json.Linq;
 
 namespace MELB_WS.Models.Inventario.Operaciones
 {
+    /*
+        Definicion :  Clase que contiene las operaciones CRUD
+                      de los controladores que participan en
+                      los procesos de inventario.
+    */
 
     public class Operaciones_Inventario
     {
@@ -24,59 +29,68 @@ namespace MELB_WS.Models.Inventario.Operaciones
         {
             Instancia_BBDD = new ConexionBBDD();            
         }
-
+        #region CRUD : Controlador instrumento 
         // Devuelve la lista total de todos los instrumentos //
         public dynamic Devolver_Lista_Todos_Instrumentos(int Bandera = 1 , int ID_Instrumento = 0)
         {
             if (Instancia_BBDD.Abrir_Conexion_BBDD() == true)
-            {                
+            {
                 CMD = new SqlCommand("I_Listado_Instrumentos", Instancia_BBDD.Conexion);
                 CMD.CommandType = CommandType.StoredProcedure;
                 CMD.Parameters.Add("@ID_Instrumento", SqlDbType.Int).Value = ID_Instrumento;
                 CMD.Parameters.Add("@Bandera", SqlDbType.Bit).Value = Bandera;
                 SqlReader = CMD.ExecuteReader();
                 List<Instrumento> Lista_Instrumento = new List<Instrumento>();
-                while (SqlReader.Read())
+                if (SqlReader.HasRows)
                 {
-                    Instrumento Nuevo_Instrumento = new Instrumento();
-                    Nuevo_Instrumento.ID_Instrumento = SqlReader.GetInt32(0);
-                    Nuevo_Instrumento.Nombre = SqlReader.GetString(1);
-                    Nuevo_Instrumento.Material = SqlReader.GetString(2);
-                    Nuevo_Instrumento.Color = SqlReader.GetString(3);
-                    Nuevo_Instrumento.Imagen = SqlReader.GetString(4);
-                    Nuevo_Instrumento.Marca = SqlReader.GetString(5);
-                    Nuevo_Instrumento.Descripcion = SqlReader.GetString(6);
-                    Nuevo_Instrumento.Estado = SqlReader.GetString(7);
-                    Nuevo_Instrumento.ID_Estuche = SqlReader.GetInt32(8);
-                    Nuevo_Instrumento.Nombre_Estuche = SqlReader.GetString(9);
-                    Nuevo_Instrumento.ID_Proveedor = SqlReader.GetInt32(10);
-                    Nuevo_Instrumento.Proveedor = SqlReader.GetString(11);
-                    Nuevo_Instrumento.Tipo_Ubicacion = SqlReader.GetString(16);
-                    if (Nuevo_Instrumento.Tipo_Ubicacion == "Bodega")
+                    while (SqlReader.Read())
                     {
-                        Nuevo_Instrumento.Estante = SqlReader.GetInt32(12);
-                        Nuevo_Instrumento.Gaveta = SqlReader.GetInt32(13);
+                        Instrumento Nuevo_Instrumento = new Instrumento();
+                        Nuevo_Instrumento.ID_Instrumento = SqlReader.GetInt32(0);
+                        Nuevo_Instrumento.Nombre = SqlReader.GetString(1);
+                        Nuevo_Instrumento.Material = SqlReader.GetString(2);
+                        Nuevo_Instrumento.Color = SqlReader.GetString(3);
+                        Nuevo_Instrumento.Imagen = SqlReader.GetString(4);
+                        Nuevo_Instrumento.Marca = SqlReader.GetString(5);
+                        Nuevo_Instrumento.Descripcion = SqlReader.GetString(6);
+                        Nuevo_Instrumento.Estado = SqlReader.GetString(7);
+                        Nuevo_Instrumento.ID_Estuche = SqlReader.GetInt32(8);
+                        Nuevo_Instrumento.Nombre_Estuche = SqlReader.GetString(9);
+                        Nuevo_Instrumento.ID_Proveedor = SqlReader.GetInt32(10);
+                        Nuevo_Instrumento.Proveedor = SqlReader.GetString(11);
+                        Nuevo_Instrumento.Tipo_Ubicacion = SqlReader.GetString(16);
+                        if (Nuevo_Instrumento.Tipo_Ubicacion == "Bodega")
+                        {
+                            Nuevo_Instrumento.Estante = SqlReader.GetInt32(12);
+                            Nuevo_Instrumento.Gaveta = SqlReader.GetInt32(13);
+                        }
+                        else
+                        {
+                            Nuevo_Instrumento.Piso = SqlReader.GetInt32(15);
+                            Nuevo_Instrumento.Numero_Aula = SqlReader.GetInt32(14);
+                        }
+                        Lista_Instrumento.Add(Nuevo_Instrumento);
                     }
-                    else
+
+                    CMD.Dispose();
+                    Instancia_BBDD.Cerrar_Conexion();
+                    return JsonConvert.SerializeObject(Lista_Instrumento, Formatting.None, new JsonSerializerSettings
                     {
-                        Nuevo_Instrumento.Piso = SqlReader.GetInt32(15);
-                        Nuevo_Instrumento.Numero_Aula = SqlReader.GetInt32(14);
-                    }
-                    Lista_Instrumento.Add(Nuevo_Instrumento);
+                        NullValueHandling = NullValueHandling.Ignore
+                    });
                 }
-                CMD.Dispose();              
-                Instancia_BBDD.Cerrar_Conexion();
-                return JsonConvert.SerializeObject(Lista_Instrumento, Formatting.None, new JsonSerializerSettings
+                else
                 {
-                    NullValueHandling = NullValueHandling.Ignore
-                });
+                    return "{\"Cod_Resultado\": 0,\"Mensaje\": \"La consulta no devolvio resultados\"}";
+                }
             }
             else
             {
-                return "{ \"Resultado\": { \"Mensaje\": \"Error de conexión con la base de datos\"}";
+                return "{\"Cod_Resultado\": -1,\"Mensaje\": \"No se pudo conectar con la base de datos\"}";
             }
         }
 
+        // Inserta un instrumento dado su modelo //
         public string Insertar_Instrumento(Instrumento Inst)
         {
             if (Instancia_BBDD.Abrir_Conexion_BBDD() == true)
@@ -99,14 +113,15 @@ namespace MELB_WS.Models.Inventario.Operaciones
                 CMD.ExecuteNonQuery();               
                 CMD.Dispose();
                 Instancia_BBDD.Cerrar_Conexion();
-                return "{ \"Resultado\": { \"Exito\": \"Se ha creado el nuevo registro\"}";
+                return "{\"Cod_Resultado\": 1,\"Mensaje\": \"Se inserto el nuevo registro\"}";
             }
             else
             {
-                return "{ \"Resultado\": { \"Error\": \"Error de conexión con la base de datos\"}";
+                return "{\"Cod_Resultado\": -1,\"Mensaje\": \"No se pudo conectar con la base de datos\"}";
             }
         }
 
+        // Elimina un instrumento dado su identificador //
         public string Eliminar_Instrumento (int Id)
         {
             if (Instancia_BBDD.Abrir_Conexion_BBDD() == true)
@@ -117,14 +132,15 @@ namespace MELB_WS.Models.Inventario.Operaciones
                 CMD.ExecuteNonQuery();
                 CMD.Dispose();
                 Instancia_BBDD.Cerrar_Conexion();
-                return "{ \"Resultado\": { \"Exito\": \"Se ha borrado el instrumento \"}";
+                return "{\"Cod_Resultado\": 1,\"Mensaje\": \"Se elimino el instrumento\"}";
             }
             else
             {
-                return "{ \"Resultado\": { \"Error\": \"Error de conexión con la base de datos\"}";
+                return "{\"Cod_Resultado\": -1,\"Mensaje\": \"No se pudo conectar con la base de datos\"}";
             }
         }
 
+        // Actualiza un instrumento dado su modelo //
         public string Actualizar_Instrumento (Instrumento Inst)
         {
             if (Instancia_BBDD.Abrir_Conexion_BBDD() == true)
@@ -147,13 +163,15 @@ namespace MELB_WS.Models.Inventario.Operaciones
                 CMD.ExecuteNonQuery();
                 CMD.Dispose();
                 Instancia_BBDD.Cerrar_Conexion();
-                return "{ \"Resultado\": { \"Exito\": \"Se ha actualizao el registro\"}";
+                return "{\"Cod_Resultado\": 1,\"Mensaje\": \"Se actualizo correctamente el registro\"}";
             }
             else
             {
-                return "{ \"Resultado\": { \"Error\": \"Error de conexión con la base de datos\"}";
+                return "{\"Cod_Resultado\": -1,\"Mensaje\": \"No se pudo conectar con la base de datos\"}";
             }
         }
+        #endregion
+
 
         // Lista de todos los Proveedores //
         public dynamic Devolver_Lista_Todos_Proveedores()
