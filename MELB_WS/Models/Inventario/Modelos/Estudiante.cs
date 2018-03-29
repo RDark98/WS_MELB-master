@@ -16,7 +16,6 @@ namespace MELB_WS.Models.Inventario.Modelos
         public string Apellido { get; set; }
         [StringLength(25, MinimumLength = 1)]
         public string Correo { get; set; }
-        [StringLength(20, MinimumLength = 1)]
         public DateTime Fecha_Nacimiento { get; set; }
         [StringLength(20, MinimumLength = 1)]
         public string Tutor_Nombre { get; set; }
@@ -24,9 +23,9 @@ namespace MELB_WS.Models.Inventario.Modelos
         public string Tutor_Apellido { get; set; }
         [StringLength(14, MinimumLength = 1)]
         public string Cedula { get; set; }
-        public int Telefono_1 { get; set; }
-        public int Telefono_2 { get; set; }
-        [StringLength(15, MinimumLength = 1)]
+        public Decimal Telefono_1 { get; set; }
+        public Decimal Telefono_2 { get; set; }
+        [StringLength(100, MinimumLength = 1)]
         public string Dirección { get; set; }
         [StringLength(1, MinimumLength = 1)]
         public string Sexo { get; set; }

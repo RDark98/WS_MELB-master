@@ -8,7 +8,7 @@ namespace MELB_WS.Models.Inventario.Modelos
 {
     public class Accesorio
     {
-        public int ID_Instrumento { get; set; }
+        public object ID_Instrumento { get; set; }
         [Required]
         public int ID_Accesorio { get; set; }
         [StringLength(15, MinimumLength = 1)]

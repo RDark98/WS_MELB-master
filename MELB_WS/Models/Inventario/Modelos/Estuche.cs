@@ -8,7 +8,6 @@ namespace MELB_WS.Models.Inventario.Modelos
 {
     public class Estuche
     {
-
         [Required]
         public int ID_Estuche { get; set; }
         [StringLength(15, MinimumLength = 1)]
