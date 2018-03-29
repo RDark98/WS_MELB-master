@@ -217,6 +217,45 @@ namespace MELB_WS.Models.Inventario.Operaciones
             }
         }
 
+
+        // Inserta un Proveedor dado su modelo //
+        public string Insertar_Proveedor(Proveedor Inst)
+        {
+            /*
+            if (Instancia_BBDD.Abrir_Conexion_BBDD() == true)
+            {
+                
+                CMD = new SqlCommand("I_Insertar_Proveedor", Instancia_BBDD.Conexion);
+                CMD.CommandType = CommandType.StoredProcedure;
+                CMD.Parameters.Add("@V_ID_Instrumento", SqlDbType.Int).Value = Inst.ID_Instrumento;
+                CMD.Parameters.Add("@V_Nombre", SqlDbType.VarChar).Value = Inst.Nombre;
+                CMD.Parameters.Add("@V_Material", SqlDbType.VarChar).Value = Inst.Material;
+                CMD.Parameters.Add("@V_Color", SqlDbType.VarChar).Value = Inst.Color;
+                CMD.Parameters.Add("@V_Imagen", SqlDbType.VarChar).Value = Inst.Imagen;
+                CMD.Parameters.Add("@V_Marca", SqlDbType.VarChar).Value = Inst.Marca;
+                CMD.Parameters.Add("@V_Descripcion", SqlDbType.VarChar).Value = Inst.Descripcion;
+                CMD.Parameters.Add("@V_Esta_En_Bodega", SqlDbType.Bit).Value = Convert.ToInt32(Inst.Tipo_Ubicacion);
+                CMD.Parameters.Add("@V_Estado", SqlDbType.VarChar).Value = Inst.Estado;
+                CMD.Parameters.Add("@V_ID_Estuche", SqlDbType.Int).Value = Inst.ID_Estuche;
+                CMD.Parameters.Add("@V_ID_Proveedor", SqlDbType.Int).Value = Inst.ID_Proveedor;
+                if (Inst.Tipo_Ubicacion == "1") { CMD.Parameters.Add("@V_Estante ", SqlDbType.Int).Value = Inst.Estante; CMD.Parameters.Add("@V_Gaveta ", SqlDbType.Int).Value = Inst.Gaveta; }
+                else { CMD.Parameters.Add("@V_ID_Aula", SqlDbType.Int).Value = Inst.ID_Aula; }
+                CMD.ExecuteNonQuery();
+                CMD.Dispose();
+                Instancia_BBDD.Cerrar_Conexion();
+                return "{\"Cod_Resultado\": 1,\"Mensaje\": \"Se inserto el nuevo registro\"}";
+            }
+            else
+            {
+                return "{\"Cod_Resultado\": -1,\"Mensaje\": \"No se pudo conectar con la base de datos\"}";
+            }
+
+                */
+
+
+            return null;
+        }
+
         #endregion
     }
 }

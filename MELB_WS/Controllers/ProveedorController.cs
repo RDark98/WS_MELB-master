@@ -25,8 +25,11 @@ namespace MELB_WS.Controllers
         [SwaggerOperation("Create")]
         [SwaggerResponse(HttpStatusCode.Created)]
         [SwaggerResponse(HttpStatusCode.NotFound)]
-        public string Post([FromBody] Ins)
+        public string Post([FromBody]Instrumento Ins)
         {
+
+            return null;
+            /*
             if (ModelState.IsValid && Ins != null)
             {
                 return Instancia_OP.Insertar_Instrumento(Ins);
@@ -35,6 +38,8 @@ namespace MELB_WS.Controllers
             {
                 return "{\"Cod_Resultado\": -1,\"Mensaje\": \"El modelo no es correcto, asegurate de enviar bien los datos\"}";
             }
+            */
+
         }
 
         // Actualizacion de un registro ya existente //
@@ -43,6 +48,8 @@ namespace MELB_WS.Controllers
         [SwaggerResponse(HttpStatusCode.NotFound)]
         public string Put([FromBody]Instrumento Ins)
         {
+            return null;
+            /*
             if (ModelState.IsValid && Ins != null)
             {
                 return Instancia_OP.Actualizar_Instrumento(Ins);
@@ -51,6 +58,8 @@ namespace MELB_WS.Controllers
             {
                 return "{\"Cod_Resultado\": -1,\"Mensaje\": \"El modelo no es correcto, asegurate de enviar bien los datos\"}";
             }
+
+            */
         }
 
         // Eliminación de un registro //
