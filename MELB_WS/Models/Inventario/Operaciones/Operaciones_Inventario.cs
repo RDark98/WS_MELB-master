@@ -29,7 +29,8 @@ namespace MELB_WS.Models.Inventario.Operaciones
         {
             Instancia_BBDD = new ConexionBBDD();            
         }
-        #region CRUD : Controlador instrumento 
+
+        #region CRUD : Controlador Instrumento 
         // Devuelve la lista total de todos los instrumentos //
         public dynamic Devolver_Lista_Todos_Instrumentos(int Bandera = 1 , int ID_Instrumento = 0)
         {
@@ -173,29 +174,49 @@ namespace MELB_WS.Models.Inventario.Operaciones
         #endregion
 
 
+        #region CRUD : Controlador Proveedor 
         // Lista de todos los Proveedores //
         public dynamic Devolver_Lista_Todos_Proveedores()
         {
-            SqlCommand CMD2 = new SqlCommand("I_Listado_Proveedores", Instancia_BBDD.Conexion);
-            SqlDataReader SqlReader;
-            CMD2.CommandType = CommandType.StoredProcedure;
-            SqlReader = CMD2.ExecuteReader();
-            List<Proveedor> Lista_Proveedor = new List<Proveedor>();
-            while (SqlReader.Read())
+            if (Instancia_BBDD.Abrir_Conexion_BBDD() == true)
             {
-                Proveedor Nuevo_Proveedor = new Proveedor();
-                Nuevo_Proveedor.ID_Proveedor = SqlReader.GetInt32(0);
-                Nuevo_Proveedor.Nombre = SqlReader.GetString(1);
-                Nuevo_Proveedor.Telefono_1 = SqlReader.GetInt32(2);
-                Nuevo_Proveedor.Telefono_2 = SqlReader.GetInt32(3);
-                Nuevo_Proveedor.Correo = SqlReader.GetString(4);
-                Nuevo_Proveedor.Direccion = SqlReader.GetString(5);
-                Nuevo_Proveedor.Imagen = SqlReader.GetString(6);
-                Lista_Proveedor.Add(Nuevo_Proveedor);
+                CMD = new SqlCommand("I_Listado_Proveedores", Instancia_BBDD.Conexion);
+                CMD.CommandType = CommandType.StoredProcedure;
+                SqlReader = CMD.ExecuteReader();
+                List<Proveedor> Lista_Proveedor = new List<Proveedor>();
+                if (SqlReader.HasRows)
+                {
+                    while (SqlReader.Read())
+                    {
+                        Proveedor Nuevo_Proveedor = new Proveedor();
+                        Nuevo_Proveedor.ID_Proveedor = SqlReader.GetInt32(0);
+                        Nuevo_Proveedor.Nombre = SqlReader.GetString(1);
+                        Nuevo_Proveedor.Telefono_1 = SqlReader.GetInt32(2);
+                        Nuevo_Proveedor.Telefono_2 = SqlReader.GetInt32(3);
+                        Nuevo_Proveedor.Correo = SqlReader.GetString(4);
+                        Nuevo_Proveedor.Direccion = SqlReader.GetString(5);
+                        Nuevo_Proveedor.Imagen = SqlReader.GetString(6);
+                        Lista_Proveedor.Add(Nuevo_Proveedor);
+                    }
+
+                    CMD.Dispose();
+                    Instancia_BBDD.Cerrar_Conexion();
+                    return JsonConvert.SerializeObject(Lista_Proveedor, Formatting.None, new JsonSerializerSettings
+                    {
+                        NullValueHandling = NullValueHandling.Ignore
+                    });
+                }
+                else
+                {
+                    return "{\"Cod_Resultado\": 0,\"Mensaje\": \"La consulta no devolvio resultados\"}";
+                }
             }
-            CMD2.Dispose();
-            var JSON = new JavaScriptSerializer();
-            return JSON.Serialize(Lista_Proveedor);
+            else
+            {
+                return "{\"Cod_Resultado\": -1,\"Mensaje\": \"No se pudo conectar con la base de datos\"}";
+            }
         }
+
+        #endregion
     }
 }
