@@ -43,18 +43,15 @@ namespace MELB_WS.Controllers
         [SwaggerResponse(HttpStatusCode.NotFound)]
         public string Put([FromBody]Proveedor Ins)
         {
-            return null;
-            /*
             if (ModelState.IsValid && Ins != null)
             {
-                return Instancia_OP.Actualizar_(Ins);
+                return Instancia_OP.Actualizar_Proveedor(Ins);
             }
             else
             {
                 return "{\"Cod_Resultado\": -1,\"Mensaje\": \"El modelo no es correcto, asegurate de enviar bien los datos\"}";
             }
 
-            */
         }
 
         // Eliminación de un registro //

@@ -263,6 +263,30 @@ namespace MELB_WS.Models.Inventario.Operaciones
             }
         }
 
+        // Actualiza un Proveedor dado su modelo //
+        public string Actualizar_Proveedor(Proveedor Inst)
+        {
+            if (Instancia_BBDD.Abrir_Conexion_BBDD() == true)
+            {
+                CMD = new SqlCommand("I_Actualizar_Proveedor", Instancia_BBDD.Conexion);
+                CMD.CommandType = CommandType.StoredProcedure;
+                CMD.Parameters.Add("@ID_Proveedor", SqlDbType.Int).Value = Inst.ID_Proveedor;
+                CMD.Parameters.Add("@Nombre", SqlDbType.VarChar).Value = Inst.Nombre;
+                CMD.Parameters.Add("@Telefono_1", SqlDbType.Decimal).Value = Inst.Telefono_1;
+                CMD.Parameters.Add("@Telefono_2", SqlDbType.Decimal).Value = Inst.Telefono_2;
+                CMD.Parameters.Add("@Correo", SqlDbType.VarChar).Value = Inst.Correo;
+                CMD.Parameters.Add("@Direccion", SqlDbType.VarChar).Value = Inst.Direccion;
+                CMD.Parameters.Add("@Imagen", SqlDbType.VarChar).Value = Inst.Imagen;
+                CMD.ExecuteNonQuery();
+                CMD.Dispose();
+                Instancia_BBDD.Cerrar_Conexion();
+                return "{\"Cod_Resultado\": 1,\"Mensaje\": \"Se actualizo correctamente el registro\"}";
+            }
+            else
+            {
+                return "{\"Cod_Resultado\": -1,\"Mensaje\": \"No se pudo conectar con la base de datos\"}";
+            }
+        }
         #endregion
     }
 }
