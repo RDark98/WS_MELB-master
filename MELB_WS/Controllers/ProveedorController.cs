@@ -21,6 +21,15 @@ namespace MELB_WS.Controllers
             return Instancia_OP.Devolver_Lista_Todos_Proveedores();
         }
 
+        // Retorno de un registro de la coleccion de datos //
+        [SwaggerOperation("GetById")]
+        [SwaggerResponse(HttpStatusCode.OK)]
+        [SwaggerResponse(HttpStatusCode.NotFound)]
+        public string Get(int ID)
+        {
+            return Instancia_OP.Devolver_Lista_Todos_Proveedores(0,ID);
+        }
+
         // Creacion de un nuevo registro //
         [SwaggerOperation("Create")]
         [SwaggerResponse(HttpStatusCode.Created)]

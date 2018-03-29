@@ -175,13 +175,15 @@ namespace MELB_WS.Models.Inventario.Operaciones
 
 
         #region CRUD : Controlador Proveedor 
-        // Lista de todos los Proveedores //
-        public dynamic Devolver_Lista_Todos_Proveedores()
+        // Lista de todos los Proveedores e Individual //
+        public dynamic Devolver_Lista_Todos_Proveedores(int Bandera = 1, int ID_Proveedor = 0)
         {
             if (Instancia_BBDD.Abrir_Conexion_BBDD() == true)
             {
                 CMD = new SqlCommand("I_Listado_Proveedores", Instancia_BBDD.Conexion);
                 CMD.CommandType = CommandType.StoredProcedure;
+                CMD.Parameters.Add("@ID_Proveedor", SqlDbType.Int).Value = ID_Proveedor;
+                CMD.Parameters.Add("@Bandera", SqlDbType.Bit).Value = Bandera;
                 SqlReader = CMD.ExecuteReader();
                 List<Proveedor> Lista_Proveedor = new List<Proveedor>();
                 if (SqlReader.HasRows)
@@ -277,6 +279,122 @@ namespace MELB_WS.Models.Inventario.Operaciones
                 CMD.Parameters.Add("@Correo", SqlDbType.VarChar).Value = Inst.Correo;
                 CMD.Parameters.Add("@Direccion", SqlDbType.VarChar).Value = Inst.Direccion;
                 CMD.Parameters.Add("@Imagen", SqlDbType.VarChar).Value = Inst.Imagen;
+                CMD.ExecuteNonQuery();
+                CMD.Dispose();
+                Instancia_BBDD.Cerrar_Conexion();
+                return "{\"Cod_Resultado\": 1,\"Mensaje\": \"Se actualizo correctamente el registro\"}";
+            }
+            else
+            {
+                return "{\"Cod_Resultado\": -1,\"Mensaje\": \"No se pudo conectar con la base de datos\"}";
+            }
+        }
+        #endregion
+
+
+        #region CRUD : Controlador Estuche 
+        // Devuelve la lista total de todos los Estuches //
+        public dynamic Devolver_Lista_Todos_Estuches(int Bandera = 1, int ID_Estuche = 0)
+        {
+            if (Instancia_BBDD.Abrir_Conexion_BBDD() == true)
+            {
+                CMD = new SqlCommand("I_Listado_Estuches", Instancia_BBDD.Conexion);
+                CMD.CommandType = CommandType.StoredProcedure;
+                CMD.Parameters.Add("@ID_Estuche", SqlDbType.Int).Value = ID_Estuche;
+                CMD.Parameters.Add("@Bandera", SqlDbType.Bit).Value = Bandera;
+                SqlReader = CMD.ExecuteReader();
+                List<Estuche> Lista_Estuche = new List<Estuche>();
+                if (SqlReader.HasRows)
+                {
+                    while (SqlReader.Read())
+                    {
+                        Estuche Nuevo_Estuche = new Estuche();
+                        Nuevo_Estuche.ID_Estuche = SqlReader.GetInt32(0);
+                        Nuevo_Estuche.Nombre = SqlReader.GetString(1);
+                        Nuevo_Estuche.Marca = SqlReader.GetString(2);
+                        Nuevo_Estuche.Material = SqlReader.GetString(3);
+                        Nuevo_Estuche.Color = SqlReader.GetString(4);
+                        Nuevo_Estuche.Estado = SqlReader.GetString(5);
+
+                        Lista_Estuche.Add(Nuevo_Estuche);
+                    }
+
+                    CMD.Dispose();
+                    Instancia_BBDD.Cerrar_Conexion();
+                    return JsonConvert.SerializeObject(Lista_Estuche, Formatting.None, new JsonSerializerSettings
+                    {
+                        NullValueHandling = NullValueHandling.Ignore
+                    });
+                }
+                else
+                {
+                    return "{\"Cod_Resultado\": 0,\"Mensaje\": \"La consulta no devolvio resultados\"}";
+                }
+            }
+            else
+            {
+                return "{\"Cod_Resultado\": -1,\"Mensaje\": \"No se pudo conectar con la base de datos\"}";
+            }
+        }
+
+        // Inserta un Estuche dado su modelo //
+        public string Insertar_Estuche(Estuche Inst)
+        {
+            if (Instancia_BBDD.Abrir_Conexion_BBDD() == true)
+            {
+
+                CMD = new SqlCommand("I_Insertar_Estuche", Instancia_BBDD.Conexion);
+                CMD.CommandType = CommandType.StoredProcedure;
+                CMD.Parameters.Add("@ID_Estuche", SqlDbType.Int).Value = Inst.ID_Estuche;
+                CMD.Parameters.Add("@Nombre", SqlDbType.VarChar).Value = Inst.Nombre;
+                CMD.Parameters.Add("@Marca", SqlDbType.VarChar).Value = Inst.Marca;
+                CMD.Parameters.Add("@Material", SqlDbType.VarChar).Value = Inst.Material;
+                CMD.Parameters.Add("@Color", SqlDbType.VarChar).Value = Inst.Color;
+                CMD.Parameters.Add("@Estado", SqlDbType.VarChar).Value = Inst.Estado;
+
+                CMD.ExecuteNonQuery();
+                CMD.Dispose();
+                Instancia_BBDD.Cerrar_Conexion();
+                return "{\"Cod_Resultado\": 1,\"Mensaje\": \"Se inserto el nuevo registro\"}";
+            }
+            else
+            {
+                return "{\"Cod_Resultado\": -1,\"Mensaje\": \"No se pudo conectar con la base de datos\"}";
+            }
+        }
+
+        // Elimina un Estuche dado su identificador //
+        public string Eliminar_Estuche(int Id)
+        {
+            if (Instancia_BBDD.Abrir_Conexion_BBDD() == true)
+            {
+                CMD = new SqlCommand("I_Eliminar_Estuche", Instancia_BBDD.Conexion);
+                CMD.CommandType = CommandType.StoredProcedure;
+                CMD.Parameters.Add("@ID_Estuche", SqlDbType.Int).Value = Id;
+                CMD.ExecuteNonQuery();
+                CMD.Dispose();
+                Instancia_BBDD.Cerrar_Conexion();
+                return "{\"Cod_Resultado\": 1,\"Mensaje\": \"Se elimino el instrumento\"}";
+            }
+            else
+            {
+                return "{\"Cod_Resultado\": -1,\"Mensaje\": \"No se pudo conectar con la base de datos\"}";
+            }
+        }
+
+        // Actualiza un Estuche dado su modelo //
+        public string Actualizar_Estuche(Estuche Inst)
+        {
+            if (Instancia_BBDD.Abrir_Conexion_BBDD() == true)
+            {
+                CMD = new SqlCommand("I_Actualizar_Estuche", Instancia_BBDD.Conexion);
+                CMD.CommandType = CommandType.StoredProcedure;
+                CMD.Parameters.Add("@ID_Estuche", SqlDbType.Int).Value = Inst.ID_Estuche;
+                CMD.Parameters.Add("@Nombre", SqlDbType.VarChar).Value = Inst.Nombre;
+                CMD.Parameters.Add("@Marca", SqlDbType.VarChar).Value = Inst.Marca;
+                CMD.Parameters.Add("@Material", SqlDbType.VarChar).Value = Inst.Material;
+                CMD.Parameters.Add("@Color", SqlDbType.VarChar).Value = Inst.Color;
+                CMD.Parameters.Add("@Estado", SqlDbType.VarChar).Value = Inst.Estado;
                 CMD.ExecuteNonQuery();
                 CMD.Dispose();
                 Instancia_BBDD.Cerrar_Conexion();
