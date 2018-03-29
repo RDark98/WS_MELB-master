@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using Swashbuckle.Swagger.Annotations;
 using MELB_WS.Models.Inventario.Operaciones;
+using MELB_WS.Models.Inventario;
 
 namespace MELB_WS.Controllers
 {
@@ -33,26 +34,27 @@ namespace MELB_WS.Controllers
         [SwaggerOperation("Create")]
         [SwaggerResponse(HttpStatusCode.Created)]
         [SwaggerResponse(HttpStatusCode.NotFound)]
-        public void Post([FromBody]dynamic value)
+        public string Post([FromBody]Instrumento Ins)
         {
-            string A = value.var1.value;
+            return Instancia_OP.Insertar_Instrumento(Ins);
         }
 
         // PUT api/values/5
         [SwaggerOperation("Update")]
         [SwaggerResponse(HttpStatusCode.OK)]
         [SwaggerResponse(HttpStatusCode.NotFound)]
-        public void Put(int id, [FromBody]string value)
+        public string Put([FromBody]Instrumento Ins)
         {
-                
+            return Instancia_OP.Actualizar_Instrumento(Ins);
         }
 
         // DELETE api/values/5
         [SwaggerOperation("Delete")]
         [SwaggerResponse(HttpStatusCode.OK)]
         [SwaggerResponse(HttpStatusCode.NotFound)]
-        public void Delete(int id)
+        public string Delete(int ID)
         {
+            return Instancia_OP.Eliminar_Instrumento(ID);
         }
     }
 }
