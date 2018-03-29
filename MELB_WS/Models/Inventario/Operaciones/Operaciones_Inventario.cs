@@ -194,7 +194,7 @@ namespace MELB_WS.Models.Inventario.Operaciones
                         Nuevo_Proveedor.Telefono_1 = SqlReader.GetDecimal(2);
                         Nuevo_Proveedor.Telefono_2 = SqlReader.GetDecimal(3);
                         Nuevo_Proveedor.Correo = SqlReader.GetString(4);
-                        Nuevo_Proveedor.Dirección = SqlReader.GetString(5);
+                        Nuevo_Proveedor.Direccion = SqlReader.GetString(5);
                         Nuevo_Proveedor.Imagen = SqlReader.GetString(6);
                         Lista_Proveedor.Add(Nuevo_Proveedor);
                     }
@@ -226,13 +226,13 @@ namespace MELB_WS.Models.Inventario.Operaciones
                 
                 CMD = new SqlCommand("I_Insertar_Proveedor", Instancia_BBDD.Conexion);
                 CMD.CommandType = CommandType.StoredProcedure;
-                CMD.Parameters.Add("@V_ID_Proveedor", SqlDbType.Int).Value = Inst.ID_Proveedor;
-                CMD.Parameters.Add("@V_Nombre", SqlDbType.VarChar).Value = Inst.Nombre;
-                CMD.Parameters.Add("@V_Telefono_1", SqlDbType.Decimal).Value = Inst.Telefono_1;
-                CMD.Parameters.Add("@V_Telefono_2", SqlDbType.Decimal).Value = Inst.Telefono_2;
-                CMD.Parameters.Add("@V_Correo", SqlDbType.VarChar).Value = Inst.Correo;
-                CMD.Parameters.Add("@V_Direccion", SqlDbType.VarChar).Value = Inst.Dirección;
-                CMD.Parameters.Add("@V_Imagen", SqlDbType.VarChar).Value = Inst.Imagen;
+                CMD.Parameters.Add("@ID_Proveedor", SqlDbType.Int).Value = Inst.ID_Proveedor;
+                CMD.Parameters.Add("@Nombre", SqlDbType.VarChar).Value = Inst.Nombre;
+                CMD.Parameters.Add("@Telefono_1", SqlDbType.Decimal).Value = Inst.Telefono_1;
+                CMD.Parameters.Add("@Telefono_2", SqlDbType.Decimal).Value = Inst.Telefono_2;
+                CMD.Parameters.Add("@Correo", SqlDbType.VarChar).Value = Inst.Correo;
+                CMD.Parameters.Add("@Direccion", SqlDbType.VarChar).Value = Inst.Direccion;
+                CMD.Parameters.Add("@Imagen", SqlDbType.VarChar).Value = Inst.Imagen;
 
                 CMD.ExecuteNonQuery();
                 CMD.Dispose();
