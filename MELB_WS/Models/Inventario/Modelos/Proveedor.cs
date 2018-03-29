@@ -16,7 +16,7 @@ namespace MELB_WS.Models.Inventario.Modelos
         public Decimal Telefono_2 { get; set; }
         [StringLength(50, MinimumLength = 1)]
         public string Correo { get; set; }
-        [StringLength(15, MinimumLength = 1)]
+        [StringLength(100, MinimumLength = 1)]
         public string Dirección { get; set; }
         public string Imagen { get; set; }
     }
