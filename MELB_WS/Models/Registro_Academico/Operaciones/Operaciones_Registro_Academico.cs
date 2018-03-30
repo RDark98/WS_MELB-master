@@ -13,7 +13,7 @@ using Newtonsoft.Json.Linq;
 namespace MELB_WS.Models.Inventario.Operaciones
 {
     /*
-     Definicion :  Clase que contiene las operaciones CRUD
+     Definicion :  Clase Nueva que contiene las operaciones CRUD
                    de los controladores que participan en
                    los procesos de Registro Académico.
     */
