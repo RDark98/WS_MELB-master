@@ -374,7 +374,7 @@ namespace MELB_WS.Models.Inventario.Operaciones
                 CMD.ExecuteNonQuery();
                 CMD.Dispose();
                 Instancia_BBDD.Cerrar_Conexion();
-                return "{\"Cod_Resultado\": 1,\"Mensaje\": \"Se elimino el instrumento\"}";
+                return "{\"Cod_Resultado\": 1,\"Mensaje\": \"Se elimino el Estuche\"}";
             }
             else
             {
@@ -406,5 +406,6 @@ namespace MELB_WS.Models.Inventario.Operaciones
             }
         }
         #endregion
+        
     }
 }
