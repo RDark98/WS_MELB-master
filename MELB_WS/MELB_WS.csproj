@@ -161,6 +161,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AccesorioController.cs" />
     <Compile Include="Controllers\EstucheController.cs" />
     <Compile Include="Controllers\EstudianteController.cs" />
     <Compile Include="Controllers\InstrumentosController.cs" />
@@ -172,11 +173,11 @@
     <Compile Include="Models\BBDD\ConexionBBDD.cs" />
     <Compile Include="Models\Inventario\Modelos\Accesorio.cs" />
     <Compile Include="Models\Inventario\Modelos\Estuche.cs" />
-    <Compile Include="Models\Registro Academico\Modelos\Estudiante.cs" />
+    <Compile Include="Models\Registro_Academico\Modelos\Estudiante.cs" />
     <Compile Include="Models\Inventario\Modelos\Instrumento.cs" />
     <Compile Include="Models\Inventario\Modelos\Proveedor.cs" />
     <Compile Include="Models\Inventario\Operaciones\Operaciones_Inventario.cs" />
-    <Compile Include="Models\Registro Academico\Operaciones\Operaciones_Registro_Academico.cs" />
+    <Compile Include="Models\Registro_Academico\Operaciones\Operaciones_Registro_Academico.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
