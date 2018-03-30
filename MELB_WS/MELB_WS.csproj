@@ -154,7 +154,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -166,6 +168,7 @@
     <Compile Include="Controllers\EstudianteController.cs" />
     <Compile Include="Controllers\InstrumentosController.cs" />
     <Compile Include="Controllers\ProveedorController.cs" />
+    <Compile Include="Controllers\RemisionController.cs" />
     <Compile Include="ErrorHandler\AiHandleErrorAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -173,10 +176,12 @@
     <Compile Include="Models\BBDD\ConexionBBDD.cs" />
     <Compile Include="Models\Inventario\Modelos\Accesorio.cs" />
     <Compile Include="Models\Inventario\Modelos\Estuche.cs" />
+    <Compile Include="Models\Registro_Academico\Modelos\Desglose_Remision.cs" />
     <Compile Include="Models\Registro_Academico\Modelos\Estudiante.cs" />
     <Compile Include="Models\Inventario\Modelos\Instrumento.cs" />
     <Compile Include="Models\Inventario\Modelos\Proveedor.cs" />
     <Compile Include="Models\Inventario\Operaciones\Operaciones_Inventario.cs" />
+    <Compile Include="Models\Registro_Academico\Modelos\Remision.cs" />
     <Compile Include="Models\Registro_Academico\Operaciones\Operaciones_Registro_Academico.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -186,7 +191,7 @@
     </Content>
     <Content Include="Connected Services\Application Insights\ConnectedService.json" />
     <None Include="packages.config" />
-    <None Include="Properties\PublishProfiles\MELBWS - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\MELBWS20180330015611 - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

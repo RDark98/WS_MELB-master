@@ -9,6 +9,7 @@ using System.Web.Script.Serialization;
 using MELB_WS.Models.Inventario.Modelos;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using MELB_WS.Models.Registro_Academico.Modelos;
 
 namespace MELB_WS.Models.Inventario.Operaciones
 {
@@ -23,7 +24,6 @@ namespace MELB_WS.Models.Inventario.Operaciones
         private ConexionBBDD Instancia_BBDD;
         private SqlDataReader SqlReader;
         private SqlCommand CMD;
-
         // Inicializa la conexión hacia la BBDD //
         public Operaciones_Registro_Academico()
         {
@@ -175,6 +175,147 @@ namespace MELB_WS.Models.Inventario.Operaciones
         }
         #endregion
 
+        #region CRUD : Controlador Remision
+       
+        public string Devolver_Lista_Remisiones(int ID_Remision = 0 , int Bandera = 1)
+        {
+            if (Instancia_BBDD.Abrir_Conexion_BBDD() == true)
+            {
+                CMD = new SqlCommand("E_Listado_Remision", Instancia_BBDD.Conexion);
+                CMD.CommandType = CommandType.StoredProcedure;
+                CMD.Parameters.Add("@ID_Remision", SqlDbType.Int).Value = ID_Remision;
+                CMD.Parameters.Add("@Bandera", SqlDbType.Bit).Value = Bandera;
+                SqlReader = CMD.ExecuteReader();
+                List<Remision> Lista_Remisiones = new List<Remision>();
+                if (SqlReader.HasRows)
+                {
+                    while (SqlReader.Read())
+                    {
+                        Remision Remision_Instrumento = new Remision();
+                        Remision_Instrumento.ID_Remision = SqlReader.GetInt32(0);
+                        Remision_Instrumento.Nombre_Estudiante = SqlReader.GetString(1);
+                        Remision_Instrumento.Fecha_Prestamo = SqlReader.GetDateTime(2);
+                        Remision_Instrumento.Fecha_Entrega = SqlReader.GetDateTime(3);
+                        Remision_Instrumento.Estado_Remision = SqlReader.GetString(4);
+                        Remision_Instrumento.Empleado_Nombre = SqlReader.GetString(5);
+                        Lista_Remisiones.Add(Remision_Instrumento);
+                        
+                    }                
+                    CMD.Dispose();
+                    SqlReader.Close();
+                                 
+                    foreach(Remision REM in Lista_Remisiones)
+                    {
+                        CMD = new SqlCommand("E_Listado_Remision_Instrumento", Instancia_BBDD.Conexion);
+                        CMD.CommandType = CommandType.StoredProcedure;
+                        CMD.Parameters.Add("@ID_Remision", SqlDbType.Int).Value = REM.ID_Remision;
+                        SqlReader = CMD.ExecuteReader();
 
+                        REM.Lista_Desglose = new List<Desglose_Remision>();
+
+                        while (SqlReader.Read())
+                        {
+                            Desglose_Remision Lista_Instrumento = new Desglose_Remision();
+                            Lista_Instrumento.ID_Instrumento = SqlReader.GetInt32(0);
+                            Lista_Instrumento.Nombre = SqlReader.GetString(1);
+                            Lista_Instrumento.Descripcion = SqlReader.GetString(2);
+                            Lista_Instrumento.Observacion_Inicial = SqlReader.GetString(3);
+                            try { Lista_Instrumento.Observacion_Final = SqlReader.GetString(4); } catch { Lista_Instrumento.Observacion_Final = "Aun no se ha entregado el instrumento"; }
+                            REM.Lista_Desglose.Add (Lista_Instrumento);
+                        }
+                        SqlReader.Close();
+                    }
+
+                    Instancia_BBDD.Cerrar_Conexion();
+
+                    return JsonConvert.SerializeObject(Lista_Remisiones, Formatting.None, new JsonSerializerSettings
+                    {
+                        NullValueHandling = NullValueHandling.Ignore
+                    });
+                }
+                else
+                {
+                    return "{\"Cod_Resultado\": 0,\"Mensaje\": \"La consulta no devolvio resultados\"}";
+                }
+            }
+            else
+            {
+                return "{\"Cod_Resultado\": -1,\"Mensaje\": \"No se pudo conectar con la base de datos\"}";
+            }
+        }
+
+        public string Insertar_Remision(Remision RE)
+        {
+            if (Instancia_BBDD.Abrir_Conexion_BBDD() == true)
+            {
+                CMD = new SqlCommand("E_Insertar_Remision", Instancia_BBDD.Conexion);
+                CMD.CommandType = CommandType.StoredProcedure;
+                CMD.Parameters.Add("@ID_Remision", SqlDbType.Int).Value = RE.ID_Remision;
+                CMD.Parameters.Add("@Fecha_Entrega", SqlDbType.DateTime).Value = RE.Fecha_Entrega;
+                CMD.Parameters.Add("@Fecha_Prestamo", SqlDbType.DateTime).Value = RE.Fecha_Prestamo;
+                CMD.Parameters.Add("@ID_Estudiante", SqlDbType.Int).Value = RE.ID_Estudiante;
+                CMD.Parameters.Add("@ID_Empleado", SqlDbType.VarChar).Value = RE.Empleado_ID;                           
+                CMD.ExecuteNonQuery();
+
+                var Lista_Instrumento = RE.ID_Instrumentos.Split(',');
+                var Lista_Observaciones_Iniciales = RE.Observaciones_Iniciales.Split(',');                
+
+                for(int I = 0; I< Lista_Instrumento.Length;I++)
+                {
+                    CMD = new SqlCommand("E_Insertar_Remision_Instrumento", Instancia_BBDD.Conexion);
+                    CMD.CommandType = CommandType.StoredProcedure;
+                    CMD.Parameters.Add("@ID_Instrumento", SqlDbType.Int).Value = Lista_Instrumento[I];
+                    CMD.Parameters.Add("@Numero_Remision", SqlDbType.Int).Value = RE.ID_Remision;
+                    CMD.Parameters.Add("@Observacion_Inicial", SqlDbType.VarChar).Value = Lista_Observaciones_Iniciales[I];
+                    CMD.ExecuteNonQuery();
+                }
+                CMD.Dispose();
+                Instancia_BBDD.Cerrar_Conexion();
+                return "{\"Cod_Resultado\": 1,\"Mensaje\": \"Se inserto el nuevo registro\"}";
+            }
+            else
+            {
+                return "{\"Cod_Resultado\": -1,\"Mensaje\": \"No se pudo conectar con la base de datos\"}";
+            }
+        }
+
+        public string Eliminar_Remision(int ID_Remision)
+        {
+            if (Instancia_BBDD.Abrir_Conexion_BBDD())
+            {
+
+                CMD = new SqlCommand("E_Eliminar_Remision", Instancia_BBDD.Conexion);
+                CMD.CommandType = CommandType.StoredProcedure;
+                CMD.Parameters.Add("@ID_Remision", SqlDbType.Int).Value = ID_Remision;                
+                CMD.ExecuteNonQuery();
+                CMD.Dispose();
+                Instancia_BBDD.Cerrar_Conexion();
+                return "{\"Cod_Resultado\": 1,\"Mensaje\": \"Se ha eliminado el registro\"}";
+            }
+            else
+            {
+                return "{\"Cod_Resultado\": -1,\"Mensaje\": \"No se pudo conectar con la base de datos\"}";
+            }
+        }
+
+        public string Actualizar_Remision(Remision RE)
+        {
+            if (Instancia_BBDD.Abrir_Conexion_BBDD() == true)
+            {
+                CMD = new SqlCommand("E_Actualizar_Remision", Instancia_BBDD.Conexion);
+                CMD.CommandType = CommandType.StoredProcedure;
+                CMD.Parameters.Add("@ID_Remision", SqlDbType.Int).Value = RE.ID_Remision;
+                CMD.Parameters.Add("@Estado", SqlDbType.DateTime).Value = RE.Estado_Remision;
+                CMD.ExecuteNonQuery();                
+                CMD.Dispose();
+                Instancia_BBDD.Cerrar_Conexion();
+                return "{\"Cod_Resultado\": 1,\"Mensaje\": \"Se inserto el nuevo registro\"}";
+            }
+            else
+            {
+                return "{\"Cod_Resultado\": -1,\"Mensaje\": \"No se pudo conectar con la base de datos\"}";
+            }
+        }
+        #endregion
     }
 }
