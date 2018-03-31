@@ -7,6 +7,7 @@ using System.Web.Http;
 using Swashbuckle.Swagger.Annotations;
 using MELB_WS.Models.Inventario.Operaciones;
 using MELB_WS.Models.Inventario;
+using System.Web.Http.Cors;
 
 namespace MELB_WS.Controllers
 {
@@ -33,7 +34,7 @@ namespace MELB_WS.Controllers
         // Creacion de un nuevo registro //
         [SwaggerOperation("Create")]
         [SwaggerResponse(HttpStatusCode.Created)]
-        [SwaggerResponse(HttpStatusCode.NotFound)]
+        [SwaggerResponse(HttpStatusCode.NotFound)]        
         public string Post([FromBody]Instrumento Ins)
         {
             if (ModelState.IsValid && Ins != null)

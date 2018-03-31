@@ -11,7 +11,7 @@ namespace MELB_WS
     {
         protected void Application_Start()
         {
-            GlobalConfiguration.Configure(WebApiConfig.Register);
+            GlobalConfiguration.Configure(WebApiConfig.Register);           
         }
     }
 }

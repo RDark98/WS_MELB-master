@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace MELB_WS
 {
@@ -11,6 +12,8 @@ namespace MELB_WS
         public static void Register(HttpConfiguration config)
         {
             // Configuración y servicios de Web API
+            var Cors = new EnableCorsAttribute("*", "*", "*");
+            config.EnableCors(Cors);
 
             // Rutas de Web API
             config.MapHttpAttributeRoutes();
