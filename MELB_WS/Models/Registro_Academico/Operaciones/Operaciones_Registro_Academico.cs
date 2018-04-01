@@ -256,11 +256,11 @@ namespace MELB_WS.Models.Inventario.Operaciones
                 CMD.Parameters.Add("@ID_Estudiante", SqlDbType.Int).Value = RE.ID_Estudiante;
                 CMD.Parameters.Add("@ID_Empleado", SqlDbType.VarChar).Value = RE.Empleado_ID;                           
                 CMD.ExecuteNonQuery();
+                
+                var Lista_Instrumento = RE.ID_Instrumentos.Split(',').Where(x => !string.IsNullOrEmpty(x)).ToArray();
+                var Lista_Observaciones_Iniciales = RE.Observaciones_Iniciales.Split(',').Where(x => !string.IsNullOrEmpty(x)).ToArray();
 
-                var Lista_Instrumento = RE.ID_Instrumentos.Split(',');
-                var Lista_Observaciones_Iniciales = RE.Observaciones_Iniciales.Split(',');                
-
-                for(int I = 0; I< Lista_Instrumento.Length;I++)
+                for (int I = 0; I< Lista_Instrumento.Length;I++)
                 {
                     CMD = new SqlCommand("E_Insertar_Remision_Instrumento", Instancia_BBDD.Conexion);
                     CMD.CommandType = CommandType.StoredProcedure;
