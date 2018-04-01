@@ -305,10 +305,9 @@ namespace MELB_WS.Models.Inventario.Operaciones
                 CMD = new SqlCommand("E_Actualizar_Remision", Instancia_BBDD.Conexion);
                 CMD.CommandType = CommandType.StoredProcedure;
                 CMD.Parameters.Add("@ID_Remision", SqlDbType.Int).Value = RE.ID_Remision;
-                CMD.Parameters.Add("@Estado", SqlDbType.DateTime).Value = RE.Estado_Remision;
+                CMD.Parameters.Add("@Estado", SqlDbType.Int).Value = RE.Estado_Remision;
                 CMD.ExecuteNonQuery();                
                 CMD.Dispose();
-                Instancia_BBDD.Cerrar_Conexion();
 
                 var Lista_Instrumento = RE.ID_Instrumentos.Split(',').Where(x => !string.IsNullOrEmpty(x)).ToArray();
                 var Lista_Observaciones_Iniciales = RE.Observaciones_Iniciales.Split(',').Where(x => !string.IsNullOrEmpty(x)).ToArray();
@@ -319,7 +318,7 @@ namespace MELB_WS.Models.Inventario.Operaciones
                     CMD = new SqlCommand("E_Actualizar_Remision_Instrumentos", Instancia_BBDD.Conexion);
                     CMD.CommandType = CommandType.StoredProcedure;
                     CMD.Parameters.Add("@ID_Instrumento", SqlDbType.Int).Value = Lista_Instrumento[I];
-                    CMD.Parameters.Add("@Numero_Remision", SqlDbType.Int).Value = RE.ID_Remision;
+                    CMD.Parameters.Add("@ID_Remision", SqlDbType.Int).Value = RE.ID_Remision;
                     CMD.Parameters.Add("@Observacion_Inicial", SqlDbType.VarChar).Value = Lista_Observaciones_Iniciales[I];
                     CMD.Parameters.Add("@Observacion_Final", SqlDbType.VarChar).Value = Lista_Observaciones_Finales[I];
                     CMD.ExecuteNonQuery();
