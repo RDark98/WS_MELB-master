@@ -23,11 +23,15 @@ namespace MELB_WS.Models.Inventario.Operaciones
         private ConexionBBDD Instancia_BBDD;
         private SqlDataReader SqlReader;
         private SqlCommand CMD;
+        private String Errores;
+        private Dictionary<int, int> Diccionario_ID_Existe;
+        private Dictionary<int, int> Diccionario_ID_No_Existe;
 
         // Inicializa la conexión hacia la BBDD //
         public Operaciones_Inventario()
         {
-            Instancia_BBDD = new ConexionBBDD();            
+            Instancia_BBDD = new ConexionBBDD(); 
+            Errores = "{\"Cod_Resultado\": -2,\"Errores\": {";
         }
 
         #region CRUD : Controlador Instrumento 
@@ -94,27 +98,37 @@ namespace MELB_WS.Models.Inventario.Operaciones
         // Inserta un instrumento dado su modelo //
         public string Insertar_Instrumento(Instrumento Inst)
         {
+            if(Inst.Tipo_Ubicacion == "1"){ Diccionario_ID_Existe = new Dictionary<int, int> { { 1, Inst.ID_Estuche }, { 3, Inst.ID_Proveedor } };}
+            else { Diccionario_ID_Existe = new Dictionary<int, int> { { 1, Inst.ID_Estuche }, { 3, Inst.ID_Proveedor },{ 4,Convert.ToInt32(Inst.ID_Aula)}};}        
+            Dictionary<int, int> Diccionario_ID_No_Existe = new Dictionary<int, int> {{ 2, Inst.ID_Instrumento }};
             if (Instancia_BBDD.Abrir_Conexion_BBDD() == true)
             {
-                CMD = new SqlCommand("I_Insertar_Instrumento", Instancia_BBDD.Conexion);
-                CMD.CommandType = CommandType.StoredProcedure;
-                CMD.Parameters.Add("@V_ID_Instrumento", SqlDbType.Int).Value = Inst.ID_Instrumento;
-                CMD.Parameters.Add("@V_Nombre", SqlDbType.VarChar).Value = Inst.Nombre;
-                CMD.Parameters.Add("@V_Material", SqlDbType.VarChar).Value = Inst.Material;
-                CMD.Parameters.Add("@V_Color", SqlDbType.VarChar).Value = Inst.Color;
-                CMD.Parameters.Add("@V_Imagen", SqlDbType.VarChar).Value = Inst.Imagen;
-                CMD.Parameters.Add("@V_Marca", SqlDbType.VarChar).Value = Inst.Marca;
-                CMD.Parameters.Add("@V_Descripcion", SqlDbType.VarChar).Value = Inst.Descripcion;
-                CMD.Parameters.Add("@V_Esta_En_Bodega", SqlDbType.Bit).Value = Convert.ToInt32(Inst.Tipo_Ubicacion);
-                CMD.Parameters.Add("@V_Estado", SqlDbType.VarChar).Value = Inst.Estado;
-                CMD.Parameters.Add("@V_ID_Estuche", SqlDbType.Int).Value = Inst.ID_Estuche;
-                CMD.Parameters.Add("@V_ID_Proveedor", SqlDbType.Int).Value = Inst.ID_Proveedor;
-                if   ( Inst.Tipo_Ubicacion == "1") { CMD.Parameters.Add("@V_Estante ", SqlDbType.Int).Value = Inst.Estante; CMD.Parameters.Add("@V_Gaveta ", SqlDbType.Int).Value = Inst.Gaveta;}
-                else { CMD.Parameters.Add("@V_ID_Aula", SqlDbType.Int).Value = Inst.ID_Aula; }
-                CMD.ExecuteNonQuery();               
-                CMD.Dispose();
-                Instancia_BBDD.Cerrar_Conexion();
-                return "{\"Cod_Resultado\": 1,\"Mensaje\": \"Se inserto el nuevo registro\"}";
+                if (Validar_ID_Controlador_Inventario(Diccionario_ID_Existe,1) == 0 & Validar_ID_Controlador_Inventario(Diccionario_ID_No_Existe,0) == 0 )
+                {
+                    CMD = new SqlCommand("I_Insertar_Instrumento", Instancia_BBDD.Conexion);
+                    CMD.CommandType = CommandType.StoredProcedure;
+                    CMD.Parameters.Add("@V_ID_Instrumento", SqlDbType.Int).Value = Inst.ID_Instrumento;
+                    CMD.Parameters.Add("@V_Nombre", SqlDbType.VarChar).Value = Inst.Nombre;
+                    CMD.Parameters.Add("@V_Material", SqlDbType.VarChar).Value = Inst.Material;
+                    CMD.Parameters.Add("@V_Color", SqlDbType.VarChar).Value = Inst.Color;
+                    CMD.Parameters.Add("@V_Imagen", SqlDbType.VarChar).Value = Inst.Imagen;
+                    CMD.Parameters.Add("@V_Marca", SqlDbType.VarChar).Value = Inst.Marca;
+                    CMD.Parameters.Add("@V_Descripcion", SqlDbType.VarChar).Value = Inst.Descripcion;
+                    CMD.Parameters.Add("@V_Esta_En_Bodega", SqlDbType.Bit).Value = Convert.ToInt32(Inst.Tipo_Ubicacion);
+                    CMD.Parameters.Add("@V_Estado", SqlDbType.VarChar).Value = Inst.Estado;
+                    CMD.Parameters.Add("@V_ID_Estuche", SqlDbType.Int).Value = Inst.ID_Estuche;
+                    CMD.Parameters.Add("@V_ID_Proveedor", SqlDbType.Int).Value = Inst.ID_Proveedor;
+                    if (Inst.Tipo_Ubicacion == "1") { CMD.Parameters.Add("@V_Estante ", SqlDbType.Int).Value = Inst.Estante; CMD.Parameters.Add("@V_Gaveta ", SqlDbType.Int).Value = Inst.Gaveta; }
+                    else { CMD.Parameters.Add("@V_ID_Aula", SqlDbType.Int).Value = Inst.ID_Aula; }
+                    CMD.ExecuteNonQuery();
+                    CMD.Dispose();
+                    Instancia_BBDD.Cerrar_Conexion();
+                    return "{\"Cod_Resultado\": 1,\"Mensaje\": \"Se inserto el nuevo registro\"}";
+                }
+                else
+                {
+                    return Errores + "}";
+                }
             }
             else
             {
@@ -144,27 +158,37 @@ namespace MELB_WS.Models.Inventario.Operaciones
         // Actualiza un instrumento dado su modelo //
         public string Actualizar_Instrumento (Instrumento Inst)
         {
+            if (Inst.Tipo_Ubicacion == "1") { Diccionario_ID_Existe = new Dictionary<int, int> { { 1, Inst.ID_Estuche }, { 3, Inst.ID_Proveedor } }; }
+            else { Diccionario_ID_Existe = new Dictionary<int, int> { { 1, Inst.ID_Estuche }, { 3, Inst.ID_Proveedor }, { 4, Convert.ToInt32(Inst.ID_Aula) } }; }
+            Dictionary<int, int> Diccionario_ID_No_Existe = new Dictionary<int, int> { { 2, Inst.ID_Instrumento } };
             if (Instancia_BBDD.Abrir_Conexion_BBDD() == true)
             {
-                CMD = new SqlCommand("I_Actualizar_Instrumento", Instancia_BBDD.Conexion);
-                CMD.CommandType = CommandType.StoredProcedure;
-                CMD.Parameters.Add("@V_ID_Instrumento", SqlDbType.Int).Value = Inst.ID_Instrumento;
-                CMD.Parameters.Add("@V_Nombre", SqlDbType.VarChar).Value = Inst.Nombre;
-                CMD.Parameters.Add("@V_Material", SqlDbType.VarChar).Value = Inst.Material;
-                CMD.Parameters.Add("@V_Color", SqlDbType.VarChar).Value = Inst.Color;
-                CMD.Parameters.Add("@V_Imagen", SqlDbType.VarChar).Value = Inst.Imagen;
-                CMD.Parameters.Add("@V_Marca", SqlDbType.VarChar).Value = Inst.Marca;
-                CMD.Parameters.Add("@V_Descripcion", SqlDbType.VarChar).Value = Inst.Descripcion;
-                CMD.Parameters.Add("@V_Esta_En_Bodega", SqlDbType.Bit).Value = Convert.ToInt32(Inst.Tipo_Ubicacion);
-                CMD.Parameters.Add("@V_Estado", SqlDbType.VarChar).Value = Inst.Estado;
-                CMD.Parameters.Add("@V_ID_Estuche", SqlDbType.Int).Value = Inst.ID_Estuche;
-                CMD.Parameters.Add("@V_ID_Proveedor", SqlDbType.Int).Value = Inst.ID_Proveedor;
-                if (Inst.Tipo_Ubicacion == "1") { CMD.Parameters.Add("@V_Estante ", SqlDbType.Int).Value = Inst.Estante; CMD.Parameters.Add("@V_Gaveta ", SqlDbType.Int).Value = Inst.Gaveta; }
-                else { CMD.Parameters.Add("@V_ID_Aula", SqlDbType.Int).Value = Inst.ID_Aula; }
-                CMD.ExecuteNonQuery();
-                CMD.Dispose();
-                Instancia_BBDD.Cerrar_Conexion();
-                return "{\"Cod_Resultado\": 1,\"Mensaje\": \"Se actualizo correctamente el registro\"}";
+                if (Validar_ID_Controlador_Inventario(Diccionario_ID_Existe, 1) == 0 & Validar_ID_Controlador_Inventario(Diccionario_ID_No_Existe, 0) == 0)
+                {
+                    CMD = new SqlCommand("I_Actualizar_Instrumento", Instancia_BBDD.Conexion);
+                    CMD.CommandType = CommandType.StoredProcedure;
+                    CMD.Parameters.Add("@V_ID_Instrumento", SqlDbType.Int).Value = Inst.ID_Instrumento;
+                    CMD.Parameters.Add("@V_Nombre", SqlDbType.VarChar).Value = Inst.Nombre;
+                    CMD.Parameters.Add("@V_Material", SqlDbType.VarChar).Value = Inst.Material;
+                    CMD.Parameters.Add("@V_Color", SqlDbType.VarChar).Value = Inst.Color;
+                    CMD.Parameters.Add("@V_Imagen", SqlDbType.VarChar).Value = Inst.Imagen;
+                    CMD.Parameters.Add("@V_Marca", SqlDbType.VarChar).Value = Inst.Marca;
+                    CMD.Parameters.Add("@V_Descripcion", SqlDbType.VarChar).Value = Inst.Descripcion;
+                    CMD.Parameters.Add("@V_Esta_En_Bodega", SqlDbType.Bit).Value = Convert.ToInt32(Inst.Tipo_Ubicacion);
+                    CMD.Parameters.Add("@V_Estado", SqlDbType.VarChar).Value = Inst.Estado;
+                    CMD.Parameters.Add("@V_ID_Estuche", SqlDbType.Int).Value = Inst.ID_Estuche;
+                    CMD.Parameters.Add("@V_ID_Proveedor", SqlDbType.Int).Value = Inst.ID_Proveedor;
+                    if (Inst.Tipo_Ubicacion == "1") { CMD.Parameters.Add("@V_Estante ", SqlDbType.Int).Value = Inst.Estante; CMD.Parameters.Add("@V_Gaveta ", SqlDbType.Int).Value = Inst.Gaveta; }
+                    else { CMD.Parameters.Add("@V_ID_Aula", SqlDbType.Int).Value = Inst.ID_Aula; }
+                    CMD.ExecuteNonQuery();
+                    CMD.Dispose();
+                    Instancia_BBDD.Cerrar_Conexion();
+                    return "{\"Cod_Resultado\": 1,\"Mensaje\": \"Se actualizo correctamente el registro\"}";
+                }
+                else
+                {
+                    return Errores + "}";
+                }
             }
             else
             {
@@ -176,7 +200,7 @@ namespace MELB_WS.Models.Inventario.Operaciones
 
         #region CRUD : Controlador Proveedor 
         // Lista de todos los Proveedores e Individual //
-        public dynamic Devolver_Lista_Todos_Proveedores(int Bandera = 1, int ID_Proveedor = 0)
+        public string Devolver_Lista_Todos_Proveedores(int Bandera = 1, int ID_Proveedor = 0)
         {
             if (Instancia_BBDD.Abrir_Conexion_BBDD() == true)
             {
@@ -408,7 +432,7 @@ namespace MELB_WS.Models.Inventario.Operaciones
         #endregion
 
 
-        #region CRUD : Controlador Estuche 
+        #region CRUD : Controlador Accesorios 
         // Devuelve la lista total de todos los Estuches //
         public dynamic Devolver_Lista_Todos_Accesorios(int Bandera = 1, int ID_Accesorio = 0)
         {
@@ -513,6 +537,125 @@ namespace MELB_WS.Models.Inventario.Operaciones
             {
                 return "{\"Cod_Resultado\": -1,\"Mensaje\": \"No se pudo conectar con la base de datos\"}";
             }
+        }
+        #endregion
+
+        #region Validaciones: CRUD
+
+        /* 
+           Descripcion: Valida que los ID en BD no esten repetidos 
+           Valores del diccionario:
+               1 : Validacion ID_Estuche
+               2 : Validacion ID_Instrumento
+               3 : Validacion ID_Proveedor
+               4 : Validacion ID_Aula
+            Valores de la bandera
+            1 : Generar nuevo tipo,
+            2 : Validar que el tipo ya exista
+        */
+        public int Validar_ID_Controlador_Inventario(Dictionary<int, int> Lista_ID,int Bandera)
+        {            
+            int Contador_Errores = 0;
+            foreach (KeyValuePair<int, int> Entrada in Lista_ID )
+            {
+                if(Entrada.Key == 1)
+                {
+                    CMD = new SqlCommand("SELECT DBO.Validar_ID_Estuche(@ID_Estuche)",Instancia_BBDD.Conexion);
+                    CMD.CommandType = CommandType.Text;
+                    CMD.Parameters.Add(new SqlParameter("@ID_Estuche",Entrada.Value));
+                    string Resultado = CMD.ExecuteScalar().ToString();
+                    // Validando que el tipo ya exista //
+                    if (Bandera == 1)
+                    {
+                        if ( Resultado == "0")
+                        {
+                            Errores = Errores + "[\"Mensaje\": \"El ID de estuche digitado no existe en la base de datos\"]";
+                            Contador_Errores++;
+                        }
+                    }
+                    else
+                    {
+                        if (Resultado == "1")
+                        {
+                            Errores = Errores + "[\"Mensaje\": \"El ID de estuche digitado ya existe en la base de datos\"]";
+                            Contador_Errores++;
+                        }
+                    }
+                }
+                else if(Entrada.Key == 2)
+                {
+                    CMD = new SqlCommand("SELECT DBO.Validar_ID_Instrumento(@ID_Instrumento)", Instancia_BBDD.Conexion);
+                    CMD.CommandType = CommandType.Text;
+                    CMD.Parameters.Add(new SqlParameter("@ID_Instrumento", Entrada.Value));
+                    string Resultado = CMD.ExecuteScalar().ToString();
+                    // Validando que el tipo ya exista //
+                    if (Bandera == 1)
+                    {
+                        if (Resultado == "0")
+                        {
+                            Errores = Errores + "[\"Mensaje\": \"El ID de instrumento digitado no existe en la base de datos\"]";
+                            Contador_Errores++;
+                        }
+                    }
+                    else
+                    {
+                        if (Resultado == "1")
+                        {
+                            Errores = Errores + "[\"Mensaje\": \"El ID de instrumento digitado ya existe en la base de datos\"]";
+                            Contador_Errores++;
+                        }
+                    }
+                }
+                else if(Entrada.Key == 3)
+                {
+                    CMD = new SqlCommand("SELECT DBO.Validar_ID_Proveedor(@ID_Proveedor)", Instancia_BBDD.Conexion);
+                    CMD.CommandType = CommandType.Text;
+                    CMD.Parameters.Add(new SqlParameter("@ID_Proveedor", Entrada.Value));
+                    string Resultado = CMD.ExecuteScalar().ToString();
+                    // Validando que el tipo ya exista //
+                    if (Bandera == 1)
+                    {
+                        if (Resultado == "0")
+                        {
+                            Errores = Errores + "[\"Mensaje\": \"El ID de proveedor digitado no existe en la base de datos\"]";
+                            Contador_Errores++;
+                        }
+                    }
+                    else
+                    {
+                        if (Resultado == "1")
+                        {
+                            Errores = Errores + "[\"Mensaje\": \"El ID de proveedor digitado ya existe en la base de datos\"]";
+                            Contador_Errores++;
+                        }
+                    }
+                }
+                else if (Entrada.Key == 4)
+                {
+                    CMD = new SqlCommand("SELECT DBO.Validar_Aula(@ID_Aula)", Instancia_BBDD.Conexion);
+                    CMD.CommandType = CommandType.Text;
+                    CMD.Parameters.Add(new SqlParameter("@ID_Aula", Entrada.Value));
+                    string Resultado = CMD.ExecuteScalar().ToString();
+                    // Validando que el tipo ya exista //
+                    if (Bandera == 1)
+                    {
+                        if (Resultado == "0")
+                        {
+                            Errores = Errores + "[\"Mensaje\": \"El ID de aula digitado no existe en la base de datos\"]";
+                            Contador_Errores++;
+                        }
+                    }
+                    else
+                    {
+                        if (Resultado == "1")
+                        {
+                            Errores = Errores + "[\"Mensaje\": \"El ID de aula digitado ya existe en la base de datos\"]";
+                            Contador_Errores++;
+                        }
+                    }
+                }
+            }            
+            return Contador_Errores;
         }
         #endregion
     }

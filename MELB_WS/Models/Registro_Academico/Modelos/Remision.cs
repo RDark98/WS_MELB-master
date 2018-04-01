@@ -19,6 +19,7 @@ namespace MELB_WS.Models.Registro_Academico.Modelos
         public object Empleado_ID { get; set; }
         public string ID_Instrumentos { get; set; }
         public string Observaciones_Iniciales { get; set; }
+        public string Observaciones_Finales { get; set; }
  
         public List<Desglose_Remision> Lista_Desglose { get; set; }
        

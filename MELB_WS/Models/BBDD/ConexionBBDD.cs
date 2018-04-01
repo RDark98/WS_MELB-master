@@ -25,7 +25,7 @@ namespace MELB_WS.Models.BBDD
             {
                 Conexion.Open();
             }
-            catch (Exception E)
+            catch 
             {                
                 return false;
             }

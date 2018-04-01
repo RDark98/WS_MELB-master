@@ -309,7 +309,24 @@ namespace MELB_WS.Models.Inventario.Operaciones
                 CMD.ExecuteNonQuery();                
                 CMD.Dispose();
                 Instancia_BBDD.Cerrar_Conexion();
-                return "{\"Cod_Resultado\": 1,\"Mensaje\": \"Se inserto el nuevo registro\"}";
+
+                var Lista_Instrumento = RE.ID_Instrumentos.Split(',').Where(x => !string.IsNullOrEmpty(x)).ToArray();
+                var Lista_Observaciones_Iniciales = RE.Observaciones_Iniciales.Split(',').Where(x => !string.IsNullOrEmpty(x)).ToArray();
+                var Lista_Observaciones_Finales = RE.Observaciones_Finales.Split(',').Where(x => !string.IsNullOrEmpty(x)).ToArray();
+
+                for (int I = 0; I < Lista_Instrumento.Length; I++)
+                {
+                    CMD = new SqlCommand("E_Actualizar_Remision_Instrumentos", Instancia_BBDD.Conexion);
+                    CMD.CommandType = CommandType.StoredProcedure;
+                    CMD.Parameters.Add("@ID_Instrumento", SqlDbType.Int).Value = Lista_Instrumento[I];
+                    CMD.Parameters.Add("@Numero_Remision", SqlDbType.Int).Value = RE.ID_Remision;
+                    CMD.Parameters.Add("@Observacion_Inicial", SqlDbType.VarChar).Value = Lista_Observaciones_Iniciales[I];
+                    CMD.Parameters.Add("@Observacion_Final", SqlDbType.VarChar).Value = Lista_Observaciones_Finales[I];
+                    CMD.ExecuteNonQuery();
+                }
+                CMD.Dispose();
+                Instancia_BBDD.Cerrar_Conexion();
+                return "{\"Cod_Resultado\": 1,\"Mensaje\": \"Se actualizo el registro correctamente\"}";
             }
             else
             {
