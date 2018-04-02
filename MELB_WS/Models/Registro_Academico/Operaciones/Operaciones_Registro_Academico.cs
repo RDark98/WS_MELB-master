@@ -307,7 +307,7 @@ namespace MELB_WS.Models.Inventario.Operaciones
                 CMD = new SqlCommand("E_Actualizar_Remision", Instancia_BBDD.Conexion);
                 CMD.CommandType = CommandType.StoredProcedure;
                 CMD.Parameters.Add("@ID_Remision", SqlDbType.Int).Value = RE.ID_Remision;
-                CMD.Parameters.Add("@Estado", SqlDbType.Int).Value = RE.Estado_Remision;
+                CMD.Parameters.Add("@Estado", SqlDbType.Int).Value = RE.ID_Estado_Remision;
                 CMD.ExecuteNonQuery();                
                 CMD.Dispose();
 
