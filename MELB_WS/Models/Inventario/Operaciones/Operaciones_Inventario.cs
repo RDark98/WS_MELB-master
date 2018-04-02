@@ -379,6 +379,7 @@ namespace MELB_WS.Models.Inventario.Operaciones
         // Inserta un Estuche dado su modelo //
         public string Insertar_Estuche(Estuche Inst)
         {
+            Diccionario_ID_No_Existe = new Dictionary<int, int> { { 1, Inst.ID_Estuche }};
             if (Instancia_BBDD.Abrir_Conexion_BBDD() == true)
             {
                 if (Validar_ID_Controlador_Inventario(Diccionario_ID_No_Existe, 0) == 0)
@@ -431,10 +432,10 @@ namespace MELB_WS.Models.Inventario.Operaciones
         // Actualiza un Estuche dado su modelo //
         public string Actualizar_Estuche(Estuche Inst)
         {
-            Diccionario_ID_No_Existe = new Dictionary<int, int> { { 1, Inst.ID_Estuche } };
+            Diccionario_ID_Existe = new Dictionary<int, int> { { 1, Inst.ID_Estuche } };
             if (Instancia_BBDD.Abrir_Conexion_BBDD() == true)
             {
-                if (Validar_ID_Controlador_Inventario(Diccionario_ID_No_Existe, 1) == 0)
+                if (Validar_ID_Controlador_Inventario(Diccionario_ID_Existe, 1) == 0)
                 {
 
                     CMD = new SqlCommand("I_Actualizar_Estuche", Instancia_BBDD.Conexion);
