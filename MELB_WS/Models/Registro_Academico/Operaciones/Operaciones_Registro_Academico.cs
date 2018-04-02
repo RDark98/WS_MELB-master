@@ -14,7 +14,7 @@ using MELB_WS.Models.Registro_Academico.Modelos;
 namespace MELB_WS.Models.Inventario.Operaciones
 {
     /*
-     Definicion :  Clase Nueva que contiene las operaciones CRUD
+     Definicion :  Clase que contiene las operaciones CRUD
                    de los controladores que participan en
                    los procesos de Registro Académico.
     */
@@ -24,6 +24,8 @@ namespace MELB_WS.Models.Inventario.Operaciones
         private ConexionBBDD Instancia_BBDD;
         private SqlDataReader SqlReader;
         private SqlCommand CMD;
+        private string Errores;
+
         // Inicializa la conexión hacia la BBDD //
         public Operaciones_Registro_Academico()
         {
@@ -332,6 +334,6 @@ namespace MELB_WS.Models.Inventario.Operaciones
                 return "{\"Cod_Resultado\": -1,\"Mensaje\": \"No se pudo conectar con la base de datos\"}";
             }
         }
-        #endregion
+        #endregion     
     }
 }

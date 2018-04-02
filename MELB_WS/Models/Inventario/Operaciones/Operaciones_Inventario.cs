@@ -246,29 +246,37 @@ namespace MELB_WS.Models.Inventario.Operaciones
         // Inserta un Proveedor dado su modelo //
         public string Insertar_Proveedor(Proveedor Inst)
         {
+            Diccionario_ID_No_Existe = new Dictionary<int, int> {{ 3, Inst.ID_Proveedor } };
             if (Instancia_BBDD.Abrir_Conexion_BBDD() == true)
             {
-                
-                CMD = new SqlCommand("I_Insertar_Proveedor", Instancia_BBDD.Conexion);
-                CMD.CommandType = CommandType.StoredProcedure;
-                CMD.Parameters.Add("@ID_Proveedor", SqlDbType.Int).Value = Inst.ID_Proveedor;
-                CMD.Parameters.Add("@Nombre", SqlDbType.VarChar).Value = Inst.Nombre;
-                CMD.Parameters.Add("@Telefono_1", SqlDbType.Decimal).Value = Inst.Telefono_1;
-                CMD.Parameters.Add("@Telefono_2", SqlDbType.Decimal).Value = Inst.Telefono_2;
-                CMD.Parameters.Add("@Correo", SqlDbType.VarChar).Value = Inst.Correo;
-                CMD.Parameters.Add("@Direccion", SqlDbType.VarChar).Value = Inst.Direccion;
-                CMD.Parameters.Add("@Imagen", SqlDbType.VarChar).Value = Inst.Imagen;
+                if (Validar_ID_Controlador_Inventario(Diccionario_ID_No_Existe, 0) == 0)
+                {
+                    CMD = new SqlCommand("I_Insertar_Proveedor", Instancia_BBDD.Conexion);
+                    CMD.CommandType = CommandType.StoredProcedure;
+                    CMD.Parameters.Add("@ID_Proveedor", SqlDbType.Int).Value = Inst.ID_Proveedor;
+                    CMD.Parameters.Add("@Nombre", SqlDbType.VarChar).Value = Inst.Nombre;
+                    CMD.Parameters.Add("@Telefono_1", SqlDbType.Decimal).Value = Inst.Telefono_1;
+                    CMD.Parameters.Add("@Telefono_2", SqlDbType.Decimal).Value = Inst.Telefono_2;
+                    CMD.Parameters.Add("@Correo", SqlDbType.VarChar).Value = Inst.Correo;
+                    CMD.Parameters.Add("@Direccion", SqlDbType.VarChar).Value = Inst.Direccion;
+                    CMD.Parameters.Add("@Imagen", SqlDbType.VarChar).Value = Inst.Imagen;
 
-                CMD.ExecuteNonQuery();
-                CMD.Dispose();
-                Instancia_BBDD.Cerrar_Conexion();
-                return "{\"Cod_Resultado\": 1,\"Mensaje\": \"Se inserto el nuevo registro\"}";
+                    CMD.ExecuteNonQuery();
+                    CMD.Dispose();
+                    Instancia_BBDD.Cerrar_Conexion();
+                    return "{\"Cod_Resultado\": 1,\"Mensaje\": \"Se inserto el nuevo registro\"}";
+                }
+                else
+                {
+                    return Errores + "}";
+                }
             }
             else
             {
                 return "{\"Cod_Resultado\": -1,\"Mensaje\": \"No se pudo conectar con la base de datos\"}";
             }
         }
+
 
         // Elimina un Proveedor dado su identificador //
         public string Eliminar_Proveedor(int Id)
@@ -292,21 +300,29 @@ namespace MELB_WS.Models.Inventario.Operaciones
         // Actualiza un Proveedor dado su modelo //
         public string Actualizar_Proveedor(Proveedor Inst)
         {
+            Diccionario_ID_Existe = new Dictionary<int, int> { { 3, Inst.ID_Proveedor } };
             if (Instancia_BBDD.Abrir_Conexion_BBDD() == true)
             {
-                CMD = new SqlCommand("I_Actualizar_Proveedor", Instancia_BBDD.Conexion);
-                CMD.CommandType = CommandType.StoredProcedure;
-                CMD.Parameters.Add("@ID_Proveedor", SqlDbType.Int).Value = Inst.ID_Proveedor;
-                CMD.Parameters.Add("@Nombre", SqlDbType.VarChar).Value = Inst.Nombre;
-                CMD.Parameters.Add("@Telefono_1", SqlDbType.Decimal).Value = Inst.Telefono_1;
-                CMD.Parameters.Add("@Telefono_2", SqlDbType.Decimal).Value = Inst.Telefono_2;
-                CMD.Parameters.Add("@Correo", SqlDbType.VarChar).Value = Inst.Correo;
-                CMD.Parameters.Add("@Direccion", SqlDbType.VarChar).Value = Inst.Direccion;
-                CMD.Parameters.Add("@Imagen", SqlDbType.VarChar).Value = Inst.Imagen;
-                CMD.ExecuteNonQuery();
-                CMD.Dispose();
-                Instancia_BBDD.Cerrar_Conexion();
-                return "{\"Cod_Resultado\": 1,\"Mensaje\": \"Se actualizo correctamente el registro\"}";
+                if (Validar_ID_Controlador_Inventario(Diccionario_ID_Existe, 1) == 0)
+                {
+                    CMD = new SqlCommand("I_Actualizar_Proveedor", Instancia_BBDD.Conexion);
+                    CMD.CommandType = CommandType.StoredProcedure;
+                    CMD.Parameters.Add("@ID_Proveedor", SqlDbType.Int).Value = Inst.ID_Proveedor;
+                    CMD.Parameters.Add("@Nombre", SqlDbType.VarChar).Value = Inst.Nombre;
+                    CMD.Parameters.Add("@Telefono_1", SqlDbType.Decimal).Value = Inst.Telefono_1;
+                    CMD.Parameters.Add("@Telefono_2", SqlDbType.Decimal).Value = Inst.Telefono_2;
+                    CMD.Parameters.Add("@Correo", SqlDbType.VarChar).Value = Inst.Correo;
+                    CMD.Parameters.Add("@Direccion", SqlDbType.VarChar).Value = Inst.Direccion;
+                    CMD.Parameters.Add("@Imagen", SqlDbType.VarChar).Value = Inst.Imagen;
+                    CMD.ExecuteNonQuery();
+                    CMD.Dispose();
+                    Instancia_BBDD.Cerrar_Conexion();
+                    return "{\"Cod_Resultado\": 1,\"Mensaje\": \"Se actualizo correctamente el registro\"}";
+                }
+                else
+                {
+                    return Errores + "}";
+                }
             }
             else
             {
@@ -318,8 +334,8 @@ namespace MELB_WS.Models.Inventario.Operaciones
 
         #region CRUD : Controlador Estuche 
         // Devuelve la lista total de todos los Estuches //
-        public dynamic Devolver_Lista_Todos_Estuches(int Bandera = 1, int ID_Estuche = 0)
-        {
+        public string Devolver_Lista_Todos_Estuches(int Bandera = 1, int ID_Estuche = 0)
+        {        
             if (Instancia_BBDD.Abrir_Conexion_BBDD() == true)
             {
                 CMD = new SqlCommand("I_Listado_Estuches", Instancia_BBDD.Conexion);
@@ -366,20 +382,27 @@ namespace MELB_WS.Models.Inventario.Operaciones
         {
             if (Instancia_BBDD.Abrir_Conexion_BBDD() == true)
             {
+                if (Validar_ID_Controlador_Inventario(Diccionario_ID_No_Existe, 0) == 0)
+                {
 
-                CMD = new SqlCommand("I_Insertar_Estuche", Instancia_BBDD.Conexion);
-                CMD.CommandType = CommandType.StoredProcedure;
-                CMD.Parameters.Add("@ID_Estuche", SqlDbType.Int).Value = Inst.ID_Estuche;
-                CMD.Parameters.Add("@Nombre", SqlDbType.VarChar).Value = Inst.Nombre;
-                CMD.Parameters.Add("@Marca", SqlDbType.VarChar).Value = Inst.Marca;
-                CMD.Parameters.Add("@Material", SqlDbType.VarChar).Value = Inst.Material;
-                CMD.Parameters.Add("@Color", SqlDbType.VarChar).Value = Inst.Color;
-                CMD.Parameters.Add("@Estado", SqlDbType.VarChar).Value = Inst.Estado;
+                    CMD = new SqlCommand("I_Insertar_Estuche", Instancia_BBDD.Conexion);
+                    CMD.CommandType = CommandType.StoredProcedure;
+                    CMD.Parameters.Add("@ID_Estuche", SqlDbType.Int).Value = Inst.ID_Estuche;
+                    CMD.Parameters.Add("@Nombre", SqlDbType.VarChar).Value = Inst.Nombre;
+                    CMD.Parameters.Add("@Marca", SqlDbType.VarChar).Value = Inst.Marca;
+                    CMD.Parameters.Add("@Material", SqlDbType.VarChar).Value = Inst.Material;
+                    CMD.Parameters.Add("@Color", SqlDbType.VarChar).Value = Inst.Color;
+                    CMD.Parameters.Add("@Estado", SqlDbType.VarChar).Value = Inst.Estado;
 
-                CMD.ExecuteNonQuery();
-                CMD.Dispose();
-                Instancia_BBDD.Cerrar_Conexion();
-                return "{\"Cod_Resultado\": 1,\"Mensaje\": \"Se inserto el nuevo registro\"}";
+                    CMD.ExecuteNonQuery();
+                    CMD.Dispose();
+                    Instancia_BBDD.Cerrar_Conexion();
+                    return "{\"Cod_Resultado\": 1,\"Mensaje\": \"Se inserto el nuevo registro\"}";
+                }
+                else
+                {
+                    return Errores + "}";
+                }
             }
             else
             {
@@ -409,20 +432,29 @@ namespace MELB_WS.Models.Inventario.Operaciones
         // Actualiza un Estuche dado su modelo //
         public string Actualizar_Estuche(Estuche Inst)
         {
+            Diccionario_ID_No_Existe = new Dictionary<int, int> { { 1, Inst.ID_Estuche } };
             if (Instancia_BBDD.Abrir_Conexion_BBDD() == true)
             {
-                CMD = new SqlCommand("I_Actualizar_Estuche", Instancia_BBDD.Conexion);
-                CMD.CommandType = CommandType.StoredProcedure;
-                CMD.Parameters.Add("@ID_Estuche", SqlDbType.Int).Value = Inst.ID_Estuche;
-                CMD.Parameters.Add("@Nombre", SqlDbType.VarChar).Value = Inst.Nombre;
-                CMD.Parameters.Add("@Marca", SqlDbType.VarChar).Value = Inst.Marca;
-                CMD.Parameters.Add("@Material", SqlDbType.VarChar).Value = Inst.Material;
-                CMD.Parameters.Add("@Color", SqlDbType.VarChar).Value = Inst.Color;
-                CMD.Parameters.Add("@Estado", SqlDbType.VarChar).Value = Inst.Estado;
-                CMD.ExecuteNonQuery();
-                CMD.Dispose();
-                Instancia_BBDD.Cerrar_Conexion();
-                return "{\"Cod_Resultado\": 1,\"Mensaje\": \"Se actualizo correctamente el registro\"}";
+                if (Validar_ID_Controlador_Inventario(Diccionario_ID_No_Existe, 1) == 0)
+                {
+
+                    CMD = new SqlCommand("I_Actualizar_Estuche", Instancia_BBDD.Conexion);
+                    CMD.CommandType = CommandType.StoredProcedure;
+                    CMD.Parameters.Add("@ID_Estuche", SqlDbType.Int).Value = Inst.ID_Estuche;
+                    CMD.Parameters.Add("@Nombre", SqlDbType.VarChar).Value = Inst.Nombre;
+                    CMD.Parameters.Add("@Marca", SqlDbType.VarChar).Value = Inst.Marca;
+                    CMD.Parameters.Add("@Material", SqlDbType.VarChar).Value = Inst.Material;
+                    CMD.Parameters.Add("@Color", SqlDbType.VarChar).Value = Inst.Color;
+                    CMD.Parameters.Add("@Estado", SqlDbType.VarChar).Value = Inst.Estado;
+                    CMD.ExecuteNonQuery();
+                    CMD.Dispose();
+                    Instancia_BBDD.Cerrar_Conexion();
+                    return "{\"Cod_Resultado\": 1,\"Mensaje\": \"Se actualizo correctamente el registro\"}";
+                }
+                else
+                {
+                    return Errores + "}";
+                }
             }
             else
             {
@@ -480,7 +512,6 @@ namespace MELB_WS.Models.Inventario.Operaciones
         {
             if (Instancia_BBDD.Abrir_Conexion_BBDD() == true)
             {
-
                 CMD = new SqlCommand("I_Insertar_Accesorio", Instancia_BBDD.Conexion);
                 CMD.CommandType = CommandType.StoredProcedure;
                 CMD.Parameters.Add("@ID_Accesorio", SqlDbType.Int).Value = Inst.ID_Accesorio;
@@ -550,8 +581,8 @@ namespace MELB_WS.Models.Inventario.Operaciones
                3 : Validacion ID_Proveedor
                4 : Validacion ID_Aula
             Valores de la bandera
-            1 : Generar nuevo tipo,
-            2 : Validar que el tipo ya exista
+            0 : Generar nuevo tipo,
+            1 : Validar que el tipo ya exista
         */
         public int Validar_ID_Controlador_Inventario(Dictionary<int, int> Lista_ID,int Bandera)
         {            
