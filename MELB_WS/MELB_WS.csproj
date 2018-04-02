@@ -197,6 +197,7 @@
     </Content>
     <Content Include="Connected Services\Application Insights\ConnectedService.json" />
     <None Include="packages.config" />
+    <None Include="Properties\PublishProfiles\MELBWS - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\MELBWS20180330015611 - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
