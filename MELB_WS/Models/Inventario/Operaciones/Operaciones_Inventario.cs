@@ -663,7 +663,7 @@ namespace MELB_WS.Models.Inventario.Operaciones
                 }
                 else if (Entrada.Key == 4)
                 {
-                    CMD = new SqlCommand("SELECT DBO.Validar_Aula(@ID_Aula)", Instancia_BBDD.Conexion);
+                    CMD = new SqlCommand("SELECT DBO.Validar_ID_Aula(@ID_Aula)", Instancia_BBDD.Conexion);
                     CMD.CommandType = CommandType.Text;
                     CMD.Parameters.Add(new SqlParameter("@ID_Aula", Entrada.Value));
                     string Resultado = CMD.ExecuteScalar().ToString();
