@@ -36,7 +36,7 @@ namespace MELB_WS.Models.Inventario.Operaciones
 
         #region CRUD : Controlador Instrumento 
         // Devuelve la lista total de todos los instrumentos //
-        public dynamic Devolver_Lista_Todos_Instrumentos(int Bandera = 1 , int ID_Instrumento = 0)
+        public string Devolver_Lista_Todos_Instrumentos(int Bandera = 1 , int ID_Instrumento = 0)
         {
             if (Instancia_BBDD.Abrir_Conexion_BBDD() == true)
             {
@@ -158,12 +158,11 @@ namespace MELB_WS.Models.Inventario.Operaciones
         // Actualiza un instrumento dado su modelo //
         public string Actualizar_Instrumento (Instrumento Inst)
         {
-            if (Inst.Tipo_Ubicacion == "1") { Diccionario_ID_Existe = new Dictionary<int, int> { { 1, Inst.ID_Estuche }, { 3, Inst.ID_Proveedor } }; }
-            else { Diccionario_ID_Existe = new Dictionary<int, int> { { 1, Inst.ID_Estuche }, { 3, Inst.ID_Proveedor }, { 4, Convert.ToInt32(Inst.ID_Aula) } }; }
-            Dictionary<int, int> Diccionario_ID_No_Existe = new Dictionary<int, int> { { 2, Inst.ID_Instrumento } };
+            if (Inst.Tipo_Ubicacion == "1") { Diccionario_ID_Existe = new Dictionary<int, int> { { 1, Inst.ID_Estuche }, { 3, Inst.ID_Proveedor }, { 2, Inst.ID_Instrumento }}; }
+            else { Diccionario_ID_Existe = new Dictionary<int, int> { { 1, Inst.ID_Estuche }, { 3, Inst.ID_Proveedor }, { 4, Convert.ToInt32(Inst.ID_Aula) }, { 2, Inst.ID_Instrumento } }; }            
             if (Instancia_BBDD.Abrir_Conexion_BBDD() == true)
             {
-                if (Validar_ID_Controlador_Inventario(Diccionario_ID_Existe, 1) == 0 & Validar_ID_Controlador_Inventario(Diccionario_ID_No_Existe, 0) == 0)
+                if (Validar_ID_Controlador_Inventario(Diccionario_ID_Existe, 1) == 0)
                 {
                     CMD = new SqlCommand("I_Actualizar_Instrumento", Instancia_BBDD.Conexion);
                     CMD.CommandType = CommandType.StoredProcedure;
